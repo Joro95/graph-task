@@ -1,9 +1,19 @@
 package com.graph.model;
 
+import com.graph.exception.CellNotInitializedException;
+
 public class ReferenceNode extends Node{
 
+    private Square data;
+    
+    public ReferenceNode(Square data) {
+        this.data = data;
+    }
 
-    public ReferenceNode(Node leftChildNode, Node rightChildNode, int result) {
-        super(leftChildNode, rightChildNode, result);
+    protected double calculateValue() throws CellNotInitializedException {
+        if (data.getStatus() == Square.Status.INITIALIZED){
+            return data.getValue();
+        }
+        throw new CellNotInitializedException();
     }
 }

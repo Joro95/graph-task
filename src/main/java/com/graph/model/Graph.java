@@ -8,19 +8,15 @@ public class Graph {
 
     public Graph(){
         graph = new ArrayList<ArrayList<Square>>();
-        for (int i = 0; i<702; i++){
+        for (int i = 1; i<999; i++){
             graph.add(new ArrayList<Square>());
-            for (int j = 1; j<=999; j++){
-                graph.get(i).add(new Square(columnRowToName(i, j), Square.Status.NOT_INITIALIZED));
+            for (int j = 0; j<=702; j++){
+                graph.get(i-1).add(new Square(this.rowColumnToName(i, j), Square.Status.NOT_INITIALIZED));
             }
         }
     }
 
-    public ArrayList<ArrayList<Square>> getGraph() {
-        return graph;
-    }
-
-    public static String columnRowToName(int column, int row){
+    private String rowColumnToName(int row, int column){
         String coordinates = "";
         int firstLetterNumber = column / 26;
         if (firstLetterNumber > 0){
@@ -36,6 +32,10 @@ public class Graph {
         coordinates = coordinates.concat(Integer.toString(row));
 
         return coordinates;
+    }
+
+    public ArrayList<ArrayList<Square>> getGraph() {
+        return graph;
     }
 
 }

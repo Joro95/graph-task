@@ -1,7 +1,14 @@
 package com.graph.model;
 
 public class NumberNode extends Node {
-    public NumberNode(Node leftChildNode, Node rightChildNode, int result) {
-        super(leftChildNode, rightChildNode, result);
+
+    private double data;
+
+    public NumberNode(double data) {
+        this.data = data;
+    }
+
+    protected double calculateValue() {
+        return data;
     }
 }

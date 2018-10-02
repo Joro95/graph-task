@@ -17,6 +17,22 @@ public class SquareFinderTest {
 
     private SquareFinder squareFinder = new SquareFinder();
 
+    //******* GET SQUARE TESTS **************
+
+    @Test
+    public void getSquare() throws InvalidInputException {
+        //Arrange
+        Graph graph = new Graph();
+
+        //Act
+        Square square = squareFinder.getSquare("C3", graph);
+
+        //Assert
+        assertEquals("C3", square.getName());
+        assertEquals(Square.Status.NOT_INITIALIZED, square.getStatus());
+
+    }
+
     //******* SQUARE NAME TO COLUMN AND ROW TESTS **************
 
     @Test
@@ -36,21 +52,36 @@ public class SquareFinderTest {
         squareFinder.squareNameToColumnRow("b33a");
     }
 
-
-    //******* GET SQUARE TESTS **************
+    //******* GET FIRST DIGIT OCCURRENCE TESTS **************
 
     @Test
-    public void getSquare() throws InvalidInputException {
-        //Arrange
-        Graph graph = new Graph();
-
+    public void getFirstDigitOccurrenceReturnsExpectedNumber(){
         //Act
-        Square square = squareFinder.getSquare("A3", graph);
+        int result = squareFinder.getFirstDigitOccurrence("str2z2yu5");
 
         //Assert
-        assertEquals("A3", square.getName());
-        assertEquals(Square.Status.NOT_INITIALIZED, square.getStatus());
+        assertEquals(3, result);
+    }
 
+
+    //******* GET COLUMN NUMBER TESTS **************
+
+    @Test
+    public void getColumnNumberWithOneLetter(){
+        //Act
+        int result = squareFinder.getColumnNumber("E");
+
+        //Assert
+        assertEquals(4, result);
+    }
+
+    @Test
+    public void getColumnNumberWithTwoLetters(){
+        //Act
+        int result = squareFinder.getColumnNumber("CD");
+
+        //Assert
+        assertEquals(81, result);
     }
 
 
