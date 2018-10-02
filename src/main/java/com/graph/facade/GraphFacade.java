@@ -6,8 +6,9 @@ import com.graph.model.Graph;
 import com.graph.model.Node;
 import com.graph.model.Square;
 import com.graph.parser.ExpressionParser;
-import com.graph.parser.InputParser;
-import com.graph.validator.Validator;
+
+import static com.graph.parser.InputParser.*;
+import static com.graph.validator.Validator.validateInputString;
 
 public class GraphFacade {
 
@@ -15,14 +16,12 @@ public class GraphFacade {
     private SquareFinder squareFinder;
     private Graph graph;
     private ExpressionParser expressionParser;
-    private InputParser inputParser;
     private GraphPrinter graphPrinter;
 
     private GraphFacade() {
         this.squareFinder = new SquareFinder();
         this.graph = new Graph();
         this.expressionParser = new ExpressionParser();
-        this.inputParser = new InputParser();
         this.graphPrinter = new GraphPrinter();
     }
 
@@ -34,11 +33,10 @@ public class GraphFacade {
     }
 
     public void processExpression(String input) throws InvalidInputException {
-        input = inputParser.parseInputToValidSyntax(input);
-        Validator.checkForEqualsSign(input);
+        validateInputString(input);
 
-        String squareName = inputParser.getSquareName(input);
-        String expression = inputParser.getExpression(input);
+        String squareName = getSquareName(input);
+        String expression = getExpression(input);
 
         Square square = squareFinder.getSquare(squareName, graph);
         Node expressionTree = expressionParser.parseExpression(expression);
@@ -46,7 +44,5 @@ public class GraphFacade {
         square.initializeSquare(expression, expressionTree);
 
     }
-
-
 
 }

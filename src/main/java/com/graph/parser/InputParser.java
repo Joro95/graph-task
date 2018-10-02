@@ -1,20 +1,35 @@
 package com.graph.parser;
 
-import com.graph.model.Square;
-
 public class InputParser {
 
+    private InputParser() {
+        throw new IllegalStateException();
+    }
 
-    public String getSquareName(String input) {
+    public static String getSquareName(String input) {
         return input.substring(0, input.indexOf('='));
     }
 
-    public String parseInputToValidSyntax(String input) {
-        String result = input.replace(" ", "");
+    public static String removeWhitespaces(String input) {
+        return input.replace(" ", "");
+    }
+
+    public static String replaceConsecutivePlusMinus(String input) {
+        //TODO
+        //if consecutive '+' and '-' -> if '-' count is an even number then replace substring with '+', if not -> replace substring with '-'
+        String parsedInput = input;
+        return parsedInput;
+    }
+
+    public static String trimInput(String input) {
+        String result = new String(input);
+        result = replaceConsecutivePlusMinus(result);
+        result = removeWhitespaces(result);
         return result;
     }
 
-    public String getExpression(String input) {
-        return input.substring(input.indexOf('='), input.length());
+    public static String getExpression(String input) {
+        input = trimInput(input);
+        return input.substring(input.indexOf('=') + 1, input.length());
     }
 }

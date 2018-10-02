@@ -50,8 +50,25 @@ public class ValidatorTest {
     }
 
     @Test
-    public void checkForEqualsSignDoesntThrowException() throws InvalidInputException {
+    public void checkForEqualsSignDoesNotThrowException() throws InvalidInputException {
         Validator.checkForEqualsSign("asd=12");
+    }
+
+    //Input validation tests
+
+    @Test
+    public void checkBracketPairsValidatesIfAllBracketsAreClosed() {
+
+    }
+
+    @Test
+    public void checkConsecutiveSymbolsThrowsExceptionWhenThereAreConsecutiveSymbolsForMultiplicationDivisionPower() {
+
+    }
+
+    @Test
+    public void checkForIllegalSignsThrowsExceptionWhenInputDataContainsIllegalSigns() {
+
     }
 
 }
