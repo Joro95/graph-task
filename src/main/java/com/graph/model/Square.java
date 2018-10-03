@@ -4,6 +4,8 @@ import com.graph.exception.CellNotInitializedException;
 import com.graph.exception.ExpressionCalculationException;
 import com.graph.exception.ParseException;
 
+import java.util.Objects;
+
 public class Square {
 
     private String name;
@@ -20,6 +22,11 @@ public class Square {
     public void initializeSquare(String expression, Node expressionTree){
         this.expression = expression;
         this.expressionTree = expressionTree;
+        calculateValue();
+        this.status = Status.INITIALIZED;
+    }
+
+    void calculateValue(){
         try {
             this.value = expressionTree.calculateValue();
         } catch (ParseException | ExpressionCalculationException e) {
@@ -29,7 +36,6 @@ public class Square {
             this.status = Status.NOT_INITIALIZED;
             return;
         }
-        this.status = Status.INITIALIZED;
     }
 
     public enum Status{
@@ -53,13 +59,16 @@ public class Square {
     public String getExpression() { return expression; }
 
     @Override
-    public String toString() {
-        return "Square{" +
-                "name='" + name + '\'' +
-                ", status=" + status +
-                ", value=" + value +
-                ", expression='" + expression + '\'' +
-                ", expressionTree=" + expressionTree +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Square square = (Square) o;
+        return Objects.equals(name, square.name);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(name);
     }
 }
