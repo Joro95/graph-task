@@ -11,13 +11,17 @@ import java.util.Map;
 
 public class SquareFinder {
 
-    public Square getSquare(String name, Graph graph) throws InvalidInputException {
+    private SquareFinder() {
+        throw new IllegalStateException();
+    }
+
+    public static Square getSquare(String name, Graph graph) throws InvalidInputException {
         Map<String, Integer> coordinates = squareNameToColumnRow(name);
         List<Square> columns = graph.getGraph().get(coordinates.get("row"));
         return columns.get(coordinates.get("column"));
     }
 
-    Map<String, Integer> squareNameToColumnRow(String name) throws InvalidInputException {
+    static Map<String, Integer> squareNameToColumnRow(String name) throws InvalidInputException {
         name = name.toUpperCase();
         int firstDigitOccurrence = getFirstDigitOccurrence(name);
         String columnAsString = name.substring(0, firstDigitOccurrence);
@@ -28,17 +32,17 @@ public class SquareFinder {
         int column = getColumnNumber(columnAsString);
         int row = Integer.parseInt(rowAsString) - 1;
 
-        return getMapWithCoordinates(column, row);
+        return constructMapWithCoordinates(column, row);
     }
 
-    private Map<String, Integer> getMapWithCoordinates(int column, int row) {
-        Map<String, Integer> coordinates = new HashMap<String, Integer>();
+    static private Map<String, Integer> constructMapWithCoordinates(int column, int row) {
+        Map<String, Integer> coordinates = new HashMap<>();
         coordinates.put("column", column);
         coordinates.put("row", row);
         return coordinates;
     }
 
-    int getColumnNumber(String columnAsString) {
+    static int getColumnNumber(String columnAsString) {
         char[] columnChars = columnAsString.toCharArray();
         int firstNumber = 0;
         int secondNumber;
@@ -51,7 +55,7 @@ public class SquareFinder {
         return firstNumber + secondNumber;
     }
 
-    int getFirstDigitOccurrence(String str){
+    static int getFirstDigitOccurrence(String str){
         char[] characters = str.toCharArray();
 
         for (int i = 0; i < characters.length; i++){

@@ -24,12 +24,13 @@ public class ExpressionParser implements ExpressionParserInterface {
     }
 
     // to postfix expression.
-    static String infixToPostfix(String exp) {
+    public static String infixToPostfix(String exp) {
         // initializing empty String for result
-        String result = new String("");
+        String result = "";
 
         // initializing empty stack
         Stack<Character> stack = new Stack<>();
+
 
         for (int i = 0; i < exp.length(); ++i) {
             char c = exp.charAt(i);
@@ -48,10 +49,11 @@ public class ExpressionParser implements ExpressionParserInterface {
                 while (!stack.isEmpty() && stack.peek() != '(') {
                     result += stack.pop();
                 }
-                if (!stack.isEmpty() && stack.peek() != '(')
+                if (!stack.isEmpty() && stack.peek() != '(') {
                     return "Invalid Expression"; // invalid expression
-                else
+                } else {
                     stack.pop();
+                }
             } else // an operator is encountered
             {
                 while (!stack.isEmpty() && preceding(c) <= preceding(stack.peek())) {
