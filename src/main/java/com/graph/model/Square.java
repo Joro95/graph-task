@@ -1,6 +1,7 @@
 package com.graph.model;
 
 import com.graph.exception.CellNotInitializedException;
+import com.graph.exception.ExpressionCalculationException;
 import com.graph.exception.ParseException;
 
 public class Square {
@@ -21,7 +22,7 @@ public class Square {
         this.expressionTree = expressionTree;
         try {
             this.value = expressionTree.calculateValue();
-        } catch (ParseException e) {
+        } catch (ParseException | ExpressionCalculationException e) {
             this.status = Status.ERROR;
             return;
         } catch (CellNotInitializedException e) {
