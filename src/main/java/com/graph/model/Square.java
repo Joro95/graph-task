@@ -31,9 +31,12 @@ public class Square {
 
     void calculateValue(){
         try {
+            Double oldValue = this.value;
             this.value = expressionTree.calculateValue();
             this.status = Status.INITIALIZED;
-            recalculateDependencies();
+            if ((oldValue == null || !oldValue.equals(this.value)) && !this.dependencyGraph.isEmpty()) {
+                recalculateDependencies();
+            }
         } catch (ParseException | ExpressionCalculationException e) {
             this.status = Status.ERROR;
             return;
