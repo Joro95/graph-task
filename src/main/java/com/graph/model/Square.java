@@ -1,7 +1,13 @@
 package com.graph.model;
 
 import com.graph.exception.CellNotInitializedException;
+import com.graph.exception.CircularDependenciesException;
+import com.graph.exception.ExpressionCalculationException;
 import com.graph.exception.ParseException;
+
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 public class Square {
 
@@ -10,25 +16,54 @@ public class Square {
     private Double value;
     private String expression;
     private Node expressionTree;
+    private Set<Square> dependencyGraph;
 
     public Square(String name, Status status){
         this.status = status;
         this.name = name;
+        this.dependencyGraph = new HashSet<>();
     }
 
     public void initializeSquare(String expression, Node expressionTree){
         this.expression = expression;
         this.expressionTree = expressionTree;
+        calculateValue();
+    }
+
+    void calculateValue(){
         try {
+            Double oldValue = this.value;
             this.value = expressionTree.calculateValue();
-        } catch (ParseException e) {
+            this.status = Status.INITIALIZED;
+            if ((oldValue == null || !oldValue.equals(this.value)) && !this.dependencyGraph.isEmpty()) {
+                recalculateDependencies();
+            }
+        } catch (ParseException | ExpressionCalculationException e) {
             this.status = Status.ERROR;
             return;
         } catch (CellNotInitializedException e) {
             this.status = Status.NOT_INITIALIZED;
             return;
         }
-        this.status = Status.INITIALIZED;
+    }
+
+    private void recalculateDependencies(){
+        for (Square square : dependencyGraph){
+            square.calculateValue();
+        }
+    }
+
+    public void addDependency(Square dependency){
+        dependencyGraph.add(dependency);
+    }
+
+    public void checkForCircularDependencies(Square square) throws CircularDependenciesException {
+        for (Square sq : this.dependencyGraph){
+            if (sq.equals(square)){
+                throw new CircularDependenciesException();
+            }
+            sq.checkForCircularDependencies(square);
+        }
     }
 
     public enum Status{
@@ -52,14 +87,17 @@ public class Square {
     public String getExpression() { return expression; }
 
     @Override
-    public String toString() {
-        return "Square{" +
-                "name='" + name + '\'' +
-                ", status=" + status +
-                ", value=" + value +
-                ", expression='" + expression + '\'' +
-                ", expressionTree=" + expressionTree +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Square square = (Square) o;
+        return Objects.equals(name, square.name);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(name);
     }
 
     public void setValue(Double value) {

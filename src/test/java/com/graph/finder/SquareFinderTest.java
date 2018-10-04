@@ -32,7 +32,6 @@ public class SquareFinderTest {
     }
 
     //******* SQUARE NAME TO COLUMN AND ROW TESTS **************
-
     @Test
     public void squareNameToColumnRowExpectMapThatContainsBoth() throws InvalidInputException {
         //Act
@@ -81,6 +80,5 @@ public class SquareFinderTest {
         //Assert
         assertEquals(81, result);
     }
-
 
 }

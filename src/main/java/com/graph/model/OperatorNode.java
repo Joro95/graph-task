@@ -1,6 +1,7 @@
 package com.graph.model;
 
 import com.graph.exception.CellNotInitializedException;
+import com.graph.exception.ExpressionCalculationException;
 import com.graph.exception.ParseException;
 
 public class OperatorNode implements Node {
@@ -26,7 +27,14 @@ public class OperatorNode implements Node {
             case '*':
                 return leftChildValue * rightChildValue;
             case '/':
-                return leftChildValue / rightChildValue;
+                if(leftChildValue == 0 || rightChildValue == 0){
+                    throw new ExpressionCalculationException();
+                }
+                double result = leftChildValue / rightChildValue;
+                if (Double.isInfinite(result) || Double.isNaN(result)){
+                    throw new ExpressionCalculationException();
+                }
+                return result;
             case '^':
                 return Math.pow(leftChildValue, rightChildValue);
             default:

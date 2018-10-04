@@ -20,7 +20,6 @@ public class SquareFinder {
         List<Square> columns = graph.getGraph().get(coordinates.get("row"));
         return columns.get(coordinates.get("column"));
     }
-
     static Map<String, Integer> squareNameToColumnRow(String name) throws InvalidInputException {
         name = name.toUpperCase();
         int firstDigitOccurrence = getFirstDigitOccurrence(name);
@@ -65,5 +64,4 @@ public class SquareFinder {
         }
         return 0;
     }
-
 }

@@ -1,6 +1,7 @@
 package com.graph.model;
 
 import com.graph.exception.CellNotInitializedException;
+import com.graph.exception.ExpressionCalculationException;
 import com.graph.exception.ParseException;
 import org.junit.Test;
 
@@ -9,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class NodeTest {
 
     @Test
-    public void numberNodeCalculateValueTest() throws CellNotInitializedException, ParseException {
+    public void numberNodeCalculateValueTest() throws CellNotInitializedException, ParseException, ExpressionCalculationException {
         //Arrange
         Node node = new NumberNode(5);
 
@@ -21,7 +22,7 @@ public class NodeTest {
     }
 
     @Test
-    public void referenceNodeCalculateValueTest() throws CellNotInitializedException, ParseException {
+    public void referenceNodeCalculateValueTest() throws CellNotInitializedException, ParseException, ExpressionCalculationException {
         //Arrange
         Square square = new Square("A1", Square.Status.INITIALIZED);
         square.initializeSquare("", new NumberNode(5));
@@ -35,7 +36,7 @@ public class NodeTest {
     }
 
     @Test(expected = CellNotInitializedException.class)
-    public void referenceNodeCalculateValueThrowsExceptionTest() throws CellNotInitializedException, ParseException {
+    public void referenceNodeCalculateValueThrowsExceptionTest() throws CellNotInitializedException, ParseException, ExpressionCalculationException {
         //Arrange
         Square square = new Square("A1", Square.Status.NOT_INITIALIZED);
         Node node = new ReferenceNode(square);
@@ -47,7 +48,7 @@ public class NodeTest {
     }
 
     @Test
-    public void operatorNodeCalculatePlusValueTest() throws CellNotInitializedException, ParseException {
+    public void operatorNodeCalculatePlusValueTest() throws CellNotInitializedException, ParseException, ExpressionCalculationException {
         //Arrange
         Node left = new NumberNode(5);
         Node right = new NumberNode(5);
@@ -63,7 +64,7 @@ public class NodeTest {
     }
 
     @Test
-    public void operatorNodeCalculateMinusValueTest() throws CellNotInitializedException, ParseException {
+    public void operatorNodeCalculateMinusValueTest() throws CellNotInitializedException, ParseException, ExpressionCalculationException {
         //Arrange
         Node left = new NumberNode(5);
         Node right = new NumberNode(5);
@@ -79,7 +80,7 @@ public class NodeTest {
     }
 
     @Test
-    public void operatorNodeCalculateMultiplyValueTest() throws CellNotInitializedException, ParseException {
+    public void operatorNodeCalculateMultiplyValueTest() throws CellNotInitializedException, ParseException, ExpressionCalculationException {
         //Arrange
         Node left = new NumberNode(5);
         Node right = new NumberNode(5);
@@ -95,7 +96,7 @@ public class NodeTest {
     }
 
     @Test
-    public void operatorNodeCalculateDivideValueTest() throws CellNotInitializedException, ParseException {
+    public void operatorNodeCalculateDivideValueTest() throws CellNotInitializedException, ParseException, ExpressionCalculationException {
         //Arrange
         Node left = new NumberNode(5);
         Node right = new NumberNode(5);
@@ -111,7 +112,7 @@ public class NodeTest {
     }
 
     @Test
-    public void operatorNodeCalculatePowerValueTest() throws CellNotInitializedException, ParseException {
+    public void operatorNodeCalculatePowerValueTest() throws CellNotInitializedException, ParseException, ExpressionCalculationException {
         //Arrange
         Node left = new NumberNode(5);
         Node right = new NumberNode(5);
@@ -127,7 +128,7 @@ public class NodeTest {
     }
 
     @Test(expected = ParseException.class)
-    public void operatorNodeCalculateValueThrowsExceptionTest() throws CellNotInitializedException, ParseException {
+    public void operatorNodeCalculateValueThrowsExceptionTest() throws CellNotInitializedException, ParseException, ExpressionCalculationException {
         //Arrange
         Node left = new NumberNode(5);
         Node right = new NumberNode(5);
