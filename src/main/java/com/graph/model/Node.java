@@ -6,4 +6,5 @@ import com.graph.exception.ParseException;
 public interface Node {
 
     double calculateValue() throws ParseException, CellNotInitializedException;
+  
 }
