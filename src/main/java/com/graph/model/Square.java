@@ -61,4 +61,8 @@ public class Square {
                 ", expressionTree=" + expressionTree +
                 '}';
     }
+
+    public void setValue(Double value) {
+        this.value = value;
+    }
 }

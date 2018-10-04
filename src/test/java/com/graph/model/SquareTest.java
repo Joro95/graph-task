@@ -27,8 +27,16 @@ public class SquareTest {
         Node refNode = new ReferenceNode(square);
         Node numNode = new NumberNode(5);
         Node numNode1 = new NumberNode(5);
-        Node opNode = new OperatorNode(numNode, refNode, '*');
-        return new OperatorNode(numNode1, opNode, '+');
+        Node opNode = new OperatorNode('*');
+
+        ((OperatorNode) opNode).setLeftChildNode(numNode);
+        ((OperatorNode) opNode).setRightChildNode(refNode);
+
+        OperatorNode operatorNode = new OperatorNode('+');
+
+        operatorNode.setRightChildNode(opNode);
+        operatorNode.setLeftChildNode(numNode1);
+        return operatorNode;
     }
 
 }

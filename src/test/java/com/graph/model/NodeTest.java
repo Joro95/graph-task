@@ -51,7 +51,9 @@ public class NodeTest {
         //Arrange
         Node left = new NumberNode(5);
         Node right = new NumberNode(5);
-        Node node = new OperatorNode(left, right, '+');
+        Node node = new OperatorNode('+');
+        ((OperatorNode) node).setRightChildNode(right);
+        ((OperatorNode) node).setLeftChildNode(left);
 
         //Act
         double result = node.calculateValue();
@@ -65,7 +67,9 @@ public class NodeTest {
         //Arrange
         Node left = new NumberNode(5);
         Node right = new NumberNode(5);
-        Node node = new OperatorNode(left, right, '-');
+        Node node = new OperatorNode('-');
+        ((OperatorNode) node).setRightChildNode(right);
+        ((OperatorNode) node).setLeftChildNode(left);
 
         //Act
         double result = node.calculateValue();
@@ -79,7 +83,9 @@ public class NodeTest {
         //Arrange
         Node left = new NumberNode(5);
         Node right = new NumberNode(5);
-        Node node = new OperatorNode(left, right, '*');
+        Node node = new OperatorNode('*');
+        ((OperatorNode) node).setRightChildNode(right);
+        ((OperatorNode) node).setLeftChildNode(left);
 
         //Act
         double result = node.calculateValue();
@@ -93,7 +99,9 @@ public class NodeTest {
         //Arrange
         Node left = new NumberNode(5);
         Node right = new NumberNode(5);
-        Node node = new OperatorNode(left, right, '/');
+        Node node = new OperatorNode('/');
+        ((OperatorNode) node).setRightChildNode(right);
+        ((OperatorNode) node).setLeftChildNode(left);
 
         //Act
         double result = node.calculateValue();
@@ -107,7 +115,9 @@ public class NodeTest {
         //Arrange
         Node left = new NumberNode(5);
         Node right = new NumberNode(5);
-        Node node = new OperatorNode(left, right, '^');
+        Node node = new OperatorNode('^');
+        ((OperatorNode) node).setRightChildNode(right);
+        ((OperatorNode) node).setLeftChildNode(left);
 
         //Act
         double result = node.calculateValue();
@@ -121,7 +131,9 @@ public class NodeTest {
         //Arrange
         Node left = new NumberNode(5);
         Node right = new NumberNode(5);
-        Node node = new OperatorNode(left, right, '1');
+        Node node = new OperatorNode('1');
+        ((OperatorNode) node).setRightChildNode(right);
+        ((OperatorNode) node).setLeftChildNode(left);
 
         //Act
         node.calculateValue();

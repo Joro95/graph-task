@@ -15,8 +15,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(MockitoJUnitRunner.class)
 public class SquareFinderTest {
 
-    private SquareFinder squareFinder = new SquareFinder();
-
     //******* GET SQUARE TESTS **************
 
     @Test
@@ -25,7 +23,7 @@ public class SquareFinderTest {
         Graph graph = new Graph();
 
         //Act
-        Square square = squareFinder.getSquare("C3", graph);
+        Square square = SquareFinder.getSquare("C3", graph);
 
         //Assert
         assertEquals("C3", square.getName());
@@ -38,7 +36,7 @@ public class SquareFinderTest {
     @Test
     public void squareNameToColumnRowExpectMapThatContainsBoth() throws InvalidInputException {
         //Act
-        Map<String, Integer> result = squareFinder.squareNameToColumnRow("b3");
+        Map<String, Integer> result = SquareFinder.squareNameToColumnRow("b3");
 
         //Assert
         assertTrue(result.containsKey("column"));
@@ -49,7 +47,7 @@ public class SquareFinderTest {
 
     @Test(expected = InvalidInputException.class)
     public void squareNameToColumnRowThrowsExceptionOnWrongName() throws InvalidInputException {
-        squareFinder.squareNameToColumnRow("b33a");
+        SquareFinder.squareNameToColumnRow("b33a");
     }
 
     //******* GET FIRST DIGIT OCCURRENCE TESTS **************
@@ -57,7 +55,7 @@ public class SquareFinderTest {
     @Test
     public void getFirstDigitOccurrenceReturnsExpectedNumber(){
         //Act
-        int result = squareFinder.getFirstDigitOccurrence("str2z2yu5");
+        int result = SquareFinder.getFirstDigitOccurrence("str2z2yu5");
 
         //Assert
         assertEquals(3, result);
@@ -69,7 +67,7 @@ public class SquareFinderTest {
     @Test
     public void getColumnNumberWithOneLetter(){
         //Act
-        int result = squareFinder.getColumnNumber("E");
+        int result = SquareFinder.getColumnNumber("E");
 
         //Assert
         assertEquals(4, result);
@@ -78,7 +76,7 @@ public class SquareFinderTest {
     @Test
     public void getColumnNumberWithTwoLetters(){
         //Act
-        int result = squareFinder.getColumnNumber("CD");
+        int result = SquareFinder.getColumnNumber("CD");
 
         //Assert
         assertEquals(81, result);
