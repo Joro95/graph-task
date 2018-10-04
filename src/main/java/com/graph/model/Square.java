@@ -1,6 +1,7 @@
 package com.graph.model;
 
 import com.graph.exception.CellNotInitializedException;
+import com.graph.exception.CircularDependenciesException;
 import com.graph.exception.ExpressionCalculationException;
 import com.graph.exception.ParseException;
 
@@ -54,6 +55,15 @@ public class Square {
 
     public void addDependency(Square dependency){
         dependencyGraph.add(dependency);
+    }
+
+    public void checkForCircularDependencies(Square square) throws CircularDependenciesException {
+        for (Square sq : this.dependencyGraph){
+            if (sq.equals(square)){
+                throw new CircularDependenciesException();
+            }
+            sq.checkForCircularDependencies(square);
+        }
     }
 
     public enum Status{

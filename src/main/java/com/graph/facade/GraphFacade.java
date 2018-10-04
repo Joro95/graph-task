@@ -1,5 +1,6 @@
 package com.graph.facade;
 
+import com.graph.exception.CircularDependenciesException;
 import com.graph.exception.InvalidInputException;
 import com.graph.model.Graph;
 import com.graph.model.Node;
@@ -27,7 +28,7 @@ public class GraphFacade {
         return graphFacade;
     }
 
-    public void processExpression(String input) throws InvalidInputException {
+    public void processExpression(String input) throws InvalidInputException, CircularDependenciesException {
         validateInputString(input);
 
         String squareName = getSquareName(input);

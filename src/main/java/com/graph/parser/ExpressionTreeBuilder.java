@@ -1,5 +1,6 @@
 package com.graph.parser;
 
+import com.graph.exception.CircularDependenciesException;
 import com.graph.exception.InvalidInputException;
 import com.graph.model.*;
 
@@ -30,7 +31,7 @@ public class ExpressionTreeBuilder {
 
     // Returns root of constructed tree for given
     // postfix expression
-    public static Node constructTree(String postfix, Graph graph, Square observer) throws InvalidInputException {
+    public static Node constructTree(String postfix, Graph graph, Square observer) throws InvalidInputException, CircularDependenciesException {
         Stack<Node> st = new Stack<>();
         Node node = null, leftChildNode, rightChildNode;
 
@@ -51,6 +52,7 @@ public class ExpressionTreeBuilder {
                     i += resultString.length() - 1;
                     //find corresponding square by result string
                     Square square = getSquare(resultString, graph);
+                    observer.checkForCircularDependencies(square);
                     square.addDependency(observer);
                     node = new ReferenceNode(square);
                 }
