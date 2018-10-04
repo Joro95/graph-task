@@ -15,8 +15,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(MockitoJUnitRunner.class)
 public class SquareFinderTest {
 
-    private SquareFinder squareFinder = new SquareFinder();
-
     //******* GET SQUARE TESTS **************
 
     @Test
@@ -25,7 +23,7 @@ public class SquareFinderTest {
         Graph graph = new Graph();
 
         //Act
-        Square square = squareFinder.getSquare("C3", graph);
+        Square square = SquareFinder.getSquare("C3", graph);
 
         //Assert
         assertEquals("C3", square.getName());
@@ -33,7 +31,56 @@ public class SquareFinderTest {
 
     }
 
+    //******* SQUARE NAME TO COLUMN AND ROW TESTS **************
 
+    @Test
+    public void squareNameToColumnRowExpectMapThatContainsBoth() throws InvalidInputException {
+        //Act
+        Map<String, Integer> result = SquareFinder.squareNameToColumnRow("b3");
+
+        //Assert
+        assertTrue(result.containsKey("column"));
+        assertTrue(result.containsKey("row"));
+        assertEquals(1, result.get("column").intValue());
+        assertEquals(2, result.get("row").intValue());
+    }
+
+    @Test(expected = InvalidInputException.class)
+    public void squareNameToColumnRowThrowsExceptionOnWrongName() throws InvalidInputException {
+        SquareFinder.squareNameToColumnRow("b33a");
+    }
+
+    //******* GET FIRST DIGIT OCCURRENCE TESTS **************
+
+    @Test
+    public void getFirstDigitOccurrenceReturnsExpectedNumber(){
+        //Act
+        int result = SquareFinder.getFirstDigitOccurrence("str2z2yu5");
+
+        //Assert
+        assertEquals(3, result);
+    }
+
+
+    //******* GET COLUMN NUMBER TESTS **************
+
+    @Test
+    public void getColumnNumberWithOneLetter(){
+        //Act
+        int result = SquareFinder.getColumnNumber("E");
+
+        //Assert
+        assertEquals(4, result);
+    }
+
+    @Test
+    public void getColumnNumberWithTwoLetters(){
+        //Act
+        int result = SquareFinder.getColumnNumber("CD");
+
+        //Assert
+        assertEquals(81, result);
+    }
 
 
 }

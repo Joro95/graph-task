@@ -1,11 +1,9 @@
 package com.graph.model;
 
 import com.graph.exception.CellNotInitializedException;
-import com.graph.exception.ExpressionCalculationException;
 import com.graph.exception.ParseException;
 
-public abstract class Node {
+public interface Node {
 
-    protected abstract double calculateValue() throws ParseException, CellNotInitializedException, ExpressionCalculationException;
-
+    double calculateValue() throws ParseException, CellNotInitializedException;
 }

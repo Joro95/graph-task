@@ -1,6 +1,6 @@
 package com.graph.model;
 
-public class NumberNode extends Node {
+public class NumberNode implements Node {
 
     private double data;
 
@@ -8,7 +8,15 @@ public class NumberNode extends Node {
         this.data = data;
     }
 
-    protected double calculateValue() {
+    @Override
+    public double calculateValue() {
         return data;
+    }
+
+    @Override
+    public String toString() {
+        return "NumberNode{" +
+                "data=" + data +
+                '}';
     }
 }
