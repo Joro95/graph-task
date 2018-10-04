@@ -31,4 +31,29 @@ public class Validator {
             }
         }
     }
+
+    public static String checkBracketPairs(String input) {
+        //TODO
+        //if input has incorrect number of opening and closing brackets -> throw exception
+        return input;
+    }
+
+    public static String checkConsecutiveSymbols(String input) {
+        //TODO
+        //if input has consecutive '/', '*' or '^' -> throw exception
+        return input;
+    }
+
+    public static String checkForIllegalSigns(String input) {
+        //TODO
+        //if there are illegal signs in the input -> throw exception
+        return input;
+    }
+
+    public static void validateInputString(String input) throws InvalidInputException {
+        checkForEqualsSign(input);
+        checkBracketPairs(input);
+        checkConsecutiveSymbols(input);
+        checkForIllegalSigns(input);
+    }
 }

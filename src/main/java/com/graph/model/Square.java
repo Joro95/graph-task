@@ -71,4 +71,8 @@ public class Square {
 
         return Objects.hash(name);
     }
+
+    public void setValue(Double value) {
+        this.value = value;
+    }
 }

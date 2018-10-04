@@ -4,8 +4,8 @@ import com.graph.exception.CellNotInitializedException;
 import com.graph.exception.ExpressionCalculationException;
 import com.graph.exception.ParseException;
 
-public abstract class Node {
-
-    protected abstract double calculateValue() throws ParseException, CellNotInitializedException, ExpressionCalculationException;
-
+public interface Node {
+  
+    double calculateValue() throws ParseException, CellNotInitializedException;
+  
 }
