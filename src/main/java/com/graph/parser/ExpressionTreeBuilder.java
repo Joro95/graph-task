@@ -30,7 +30,7 @@ public class ExpressionTreeBuilder {
 
     // Returns root of constructed tree for given
     // postfix expression
-    public static Node constructTree(String postfix, Graph graph) throws InvalidInputException {
+    public static Node constructTree(String postfix, Graph graph, Square observer) throws InvalidInputException {
         Stack<Node> st = new Stack<>();
         Node node = null, leftChildNode, rightChildNode;
 
@@ -51,6 +51,7 @@ public class ExpressionTreeBuilder {
                     i += resultString.length() - 1;
                     //find corresponding square by result string
                     Square square = getSquare(resultString, graph);
+                    square.addDependency(observer);
                     node = new ReferenceNode(square);
                 }
                 //if number -> parse string to double and assign it

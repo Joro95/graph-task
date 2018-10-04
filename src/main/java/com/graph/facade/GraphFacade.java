@@ -6,6 +6,7 @@ import com.graph.model.Node;
 import com.graph.model.Square;
 
 import static com.graph.finder.SquareFinder.getSquare;
+import static com.graph.parser.ExpressionParser.infixToPostfix;
 import static com.graph.parser.ExpressionTreeBuilder.constructTree;
 import static com.graph.parser.InputParser.*;
 import static com.graph.validator.Validator.validateInputString;
@@ -33,9 +34,13 @@ public class GraphFacade {
         String expression = getExpression(input);
 
         Square square = getSquare(squareName, graph);
-        Node expressionTree = constructTree(expression, graph);
+        String postFix = infixToPostfix(expression);
+        Node expressionTree = constructTree(postFix, graph, square);
 
         square.initializeSquare(expression, expressionTree);
+    }
 
+    public Graph getGraph() {
+        return graph;
     }
 }
