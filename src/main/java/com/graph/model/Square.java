@@ -58,6 +58,9 @@ public class Square {
     }
 
     public void checkForCircularDependencies(Square square) throws CircularDependenciesException {
+        if(square.equals(this)){
+            throw new CircularDependenciesException();
+        }
         for (Square sq : this.dependencyGraph){
             if (sq.equals(square)){
                 throw new CircularDependenciesException();
