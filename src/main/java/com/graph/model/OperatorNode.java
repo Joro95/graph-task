@@ -81,4 +81,19 @@ public class OperatorNode implements Node {
                 ", data=" + data +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OperatorNode)) return false;
+        OperatorNode that = (OperatorNode) o;
+        return data == that.data &&
+                com.google.common.base.Objects.equal(getLeftChildNode(), that.getLeftChildNode()) &&
+                com.google.common.base.Objects.equal(getRightChildNode(), that.getRightChildNode());
+    }
+
+    @Override
+    public int hashCode() {
+        return com.google.common.base.Objects.hashCode(getLeftChildNode(), getRightChildNode(), data);
+    }
 }

@@ -1,5 +1,6 @@
 package com.graph.model;
 
+import com.google.common.base.Objects;
 import com.graph.exception.CellNotInitializedException;
 
 public class ReferenceNode implements Node {
@@ -18,4 +19,16 @@ public class ReferenceNode implements Node {
         throw new CellNotInitializedException();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ReferenceNode)) return false;
+        ReferenceNode that = (ReferenceNode) o;
+        return Objects.equal(data, that.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(data);
+    }
 }

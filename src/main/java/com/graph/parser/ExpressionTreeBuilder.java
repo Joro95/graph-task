@@ -1,7 +1,9 @@
 package com.graph.parser;
 
+import com.graph.exception.CellNotInitializedException;
 import com.graph.exception.CircularDependenciesException;
 import com.graph.exception.InvalidInputException;
+import com.graph.exception.ParseException;
 import com.graph.model.*;
 
 import java.util.Stack;
@@ -13,25 +15,14 @@ import static com.graph.finder.SquareFinder.getSquare;
  */
 public class ExpressionTreeBuilder {
 
-    public static final byte MINUS = -1;
-
     private ExpressionTreeBuilder()
     {
         throw new IllegalStateException();
     }
 
-    public static boolean isOperator(char c) {
-        if (c == '+' || c == '-'
-                || c == '*' || c == '/'
-                || c == '^') {
-            return true;
-        }
-        return false;
-    }
-
     // Returns root of constructed tree for given
     // postfix expression
-    public static Node constructTree(String postfix, Graph graph, Square observer) throws InvalidInputException, CircularDependenciesException {
+    public static Node constructTree(String postfix, Graph graph, Square observer) throws InvalidInputException, CircularDependenciesException, CellNotInitializedException, ParseException {
         Stack<Node> st = new Stack<>();
         Node node = null, leftChildNode, rightChildNode;
 
@@ -77,12 +68,15 @@ public class ExpressionTreeBuilder {
 
                 // Pop two top nodes
                 // Store top
-                rightChildNode = st.pop();      // Remove top
+                rightChildNode = st.pop();
                 leftChildNode = st.pop();
 
-                //  make them children
                 ((OperatorNode) node).setLeftChildNode(leftChildNode);
                 ((OperatorNode) node).setRightChildNode(rightChildNode);
+
+                if(rightChildNode instanceof NumberNode && leftChildNode instanceof NumberNode) {
+                    node = new NumberNode(node.calculateValue());
+                }
 
                 // System.out.println(t1 + "" + t2);
                 // Add this subexpression to stack
@@ -96,6 +90,12 @@ public class ExpressionTreeBuilder {
         st.pop();
 
         return node;
+    }
+
+    static boolean isOperator(char c) {
+        return c == '+' || c == '-'
+                || c == '*' || c == '/'
+                || c == '^';
     }
 
     private static String createReferenceName(String substring) {

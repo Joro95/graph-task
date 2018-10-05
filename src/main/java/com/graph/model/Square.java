@@ -28,6 +28,16 @@ public class Square {
         this.expression = expression;
         this.expressionTree = expressionTree;
         calculateValue();
+        if(this.status == Status.NOT_INITIALIZED) {
+            optimizeExpressionTree();
+        }
+    }
+
+    private void optimizeExpressionTree() {
+        //TODO
+        //go through the expression Tree
+        //if Node is operatorNode -> if both children are number nodes -> calculate and replace operator node with number node
+        //construct new tree
     }
 
     void calculateValue(){
@@ -98,9 +108,5 @@ public class Square {
     public int hashCode() {
 
         return Objects.hash(name);
-    }
-
-    public void setValue(Double value) {
-        this.value = value;
     }
 }
