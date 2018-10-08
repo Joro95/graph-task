@@ -1,8 +1,12 @@
 package com.graph.model;
 
+import com.graph.exception.CellNotInitializedException;
+import com.graph.exception.ParseException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 public class SquareTest {
 
@@ -19,6 +23,41 @@ public class SquareTest {
         assertEquals(Square.Status.INITIALIZED, square.getStatus());
         assertEquals(30.0, square.getValue(), 1);
         assertEquals("5+5*A2", square.getExpression());
+    }
+
+    @Test
+    public void calculateSquareWithoutUnnecessaryCalculations() throws CellNotInitializedException, ParseException {
+        //Arrange
+        Square squareA = new Square("A1", Square.Status.NOT_INITIALIZED);
+        Square squareB = new Square("B1", Square.Status.NOT_INITIALIZED);
+        Square squareC = new Square("C1", Square.Status.NOT_INITIALIZED);
+        squareA.addDependency(squareB);
+        squareA.addDependency(squareC);
+        squareB.addDependency(squareC);
+        squareB.addObserver(squareA);
+        squareC.addObserver(squareA);
+        squareC.addObserver(squareB);
+        Node expressionTreeA = createExpressionTreeForA(squareB, squareC);
+        Node expressionTreeB = spy(new ReferenceNode(squareC));
+        Node expressionTreeC = spy(new NumberNode(5));
+
+        //Act
+        squareA.initializeSquare("B1+C1", expressionTreeA);
+        squareB.initializeSquare("C1", expressionTreeB);
+        squareC.initializeSquare("5", expressionTreeC);
+
+        //Assert
+        verify(expressionTreeA).calculateValue();
+        verify(expressionTreeB).calculateValue();
+        verify(expressionTreeC).calculateValue();
+
+    }
+
+    private Node createExpressionTreeForA(Square squareB, Square squareC) {
+        Node node = spy(new OperatorNode('+'));
+        ((OperatorNode) node).setLeftChildNode(new ReferenceNode(squareB));
+        ((OperatorNode) node).setRightChildNode(new ReferenceNode(squareC));
+        return node;
     }
 
     private Node createExpressionTree() {
@@ -38,5 +77,6 @@ public class SquareTest {
         operatorNode.setLeftChildNode(numNode1);
         return operatorNode;
     }
+
 
 }
