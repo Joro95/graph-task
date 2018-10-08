@@ -16,41 +16,53 @@ public class Square {
     private Double value;
     private String expression;
     private Node expressionTree;
+    private Set<Square> observersGraph;
     private Set<Square> dependencyGraph;
 
     public Square(String name, Status status){
         this.status = status;
         this.name = name;
+        this.observersGraph = new HashSet<>();
         this.dependencyGraph = new HashSet<>();
     }
 
     public void initializeSquare(String expression, Node expressionTree){
         this.expression = expression;
         this.expressionTree = expressionTree;
-        calculateValue();
+        calculateValue(new HashSet<>());
     }
 
-    void calculateValue(){
-        try {
-            Double oldValue = this.value;
-            this.value = expressionTree.calculateValue();
-            this.status = Status.INITIALIZED;
-            if ((oldValue == null || !oldValue.equals(this.value)) && !this.dependencyGraph.isEmpty()) {
-                recalculateDependencies();
-            }
-        } catch (ParseException | ExpressionCalculationException e) {
-            this.status = Status.ERROR;
-            return;
-        } catch (CellNotInitializedException e) {
-            this.status = Status.NOT_INITIALIZED;
-            return;
-        }
-    }
-
-    private void recalculateDependencies(){
+    void calculateValue(Set<Square> updatedSquares){
         for (Square square : dependencyGraph){
-            square.calculateValue();
+            if (square.getStatus() != Status.INITIALIZED){
+                return;
+            }
         }
+        if (!updatedSquares.contains(this)) {
+            try {
+                Double oldValue = this.value;
+                this.value = expressionTree.calculateValue();
+                this.status = Status.INITIALIZED;
+                if ((oldValue == null || !oldValue.equals(this.value)) && !this.observersGraph.isEmpty()) {
+                    recalculateObservers(updatedSquares);
+                }
+            } catch (ParseException | ExpressionCalculationException e) {
+                this.status = Status.ERROR;
+            } catch (CellNotInitializedException e) {
+                this.status = Status.NOT_INITIALIZED;
+            }
+        }
+        updatedSquares.add(this);
+    }
+
+    void recalculateObservers(Set<Square> updatedSquares){
+        for (Square square : observersGraph){
+            square.calculateValue(updatedSquares);
+        }
+    }
+
+    public void addObserver(Square observer){
+        observersGraph.add(observer);
     }
 
     public void addDependency(Square dependency){
@@ -61,7 +73,7 @@ public class Square {
         if(square.equals(this)){
             throw new CircularDependenciesException();
         }
-        for (Square sq : this.dependencyGraph){
+        for (Square sq : this.observersGraph){
             if (sq.equals(square)){
                 throw new CircularDependenciesException();
             }

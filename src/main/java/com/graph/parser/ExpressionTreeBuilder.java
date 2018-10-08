@@ -53,7 +53,8 @@ public class ExpressionTreeBuilder {
                     //find corresponding square by result string
                     Square square = getSquare(resultString, graph);
                     observer.checkForCircularDependencies(square);
-                    square.addDependency(observer);
+                    square.addObserver(observer);
+                    observer.addDependency(square);
                     node = new ReferenceNode(square);
                 }
                 //if number -> parse string to double and assign it
