@@ -57,22 +57,7 @@ public class OperatorNode implements Node {
     public void setRightChildNode(Node rightChildNode) {
         this.rightChildNode = rightChildNode;
     }
-
-//    public static void main(String[] args) throws CellNotInitializedException, ParseException {
-//        Node root = new OperatorNode('+');
-//
-//        Node leftChild = new NumberNode(-3.5);
-//
-//        Node rightChild = new OperatorNode('+');
-//
-//
-//        ((OperatorNode) root).setLeftChildNode(leftChild);
-//        ((OperatorNode) root).setRightChildNode(rightChild);
-//
-//        System.out.println(root.calculateValue());
-//    }
-
-
+    
     @Override
     public String toString() {
         return "OperatorNode{" +

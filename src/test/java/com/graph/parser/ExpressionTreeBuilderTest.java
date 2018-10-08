@@ -53,7 +53,6 @@ public class ExpressionTreeBuilderTest {
 
     @Test
     public void constructTree_returns_root_node_of_tree_from_give_expression() throws CircularDependenciesException, CellNotInitializedException, ParseException, InvalidInputException {
-        //TODO
         Graph graph = new Graph();
         Square observer = new Square("A1", Square.Status.INITIALIZED);
         Node root = new OperatorNode('+');

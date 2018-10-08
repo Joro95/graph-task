@@ -4,26 +4,25 @@ import java.util.Stack;
 
 public class ExpressionParser {
 
-    public static String infixToPostfix(String exp) {
+    public static String infixToPostfix(String expression) {
         String result = "";
 
         Stack<Character> stack = new Stack<>();
 
 
-        for (int i = 0; i < exp.length(); ++i) {
-            char c = exp.charAt(i);
+        for (int i = 0; i < expression.length(); ++i) {
+            char currentCharacter = expression.charAt(i);
 
             // If the scanned character is an operand or a decimal delimiter, add it to output.
-            if (Character.isLetterOrDigit(c) || c == '.') {
-                result += c;
+            if (Character.isLetterOrDigit(currentCharacter) || currentCharacter == '.') {
+                result += currentCharacter;
             }
             // If the scanned character is a '(', push it to the stack.
-            else if (c == '(') {
-                stack.push(c);
+            else if (currentCharacter == '(') {
+                stack.push(currentCharacter);
             }
-            //  If the scanned character is a ')', pop from the stack
-            // until an '(' is encountered.
-            else if (c == ')') {
+            //  If the scanned character is a ')', pop from the stack until a '(' is encountered.
+            else if (currentCharacter == ')') {
                 while (!stack.isEmpty() && stack.peek() != '(') {
                     result += stack.pop();
                 }
@@ -34,10 +33,10 @@ public class ExpressionParser {
                 }
             } else // an operator is encountered
             {
-                while (!stack.isEmpty() && preceding(c) <= preceding(stack.peek())) {
+                while (!stack.isEmpty() && preceding(currentCharacter) <= preceding(stack.peek())) {
                     result += stack.pop();
                 }
-                stack.push(c);
+                stack.push(currentCharacter);
                 result += " ";
             }
 
@@ -49,8 +48,8 @@ public class ExpressionParser {
         return result;
     }
 
-    private static int preceding(char ch) {
-        switch (ch) {
+    private static int preceding(char character) {
+        switch (character) {
             case '+':
             case '-':
                 return 1;

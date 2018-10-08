@@ -82,7 +82,7 @@ public class Validator {
 
     private static String checkForIllegalSigns(String input) throws InvalidInputException {
         //if there are illegal signs in the input -> throw exception
-        if (!Pattern.matches("[a-zA-Z0-9+\\-*/()=]*", input)) {
+        if (!Pattern.matches("[a-zA-Z0-9+\\-*/()^=]*", input)) {
             throw new InvalidInputException();
         }
         return input;

@@ -28,19 +28,9 @@ public class Square {
         this.expression = expression;
         this.expressionTree = expressionTree;
         calculateValue();
-        if(this.status == Status.NOT_INITIALIZED) {
-            optimizeExpressionTree();
-        }
     }
 
-    private void optimizeExpressionTree() {
-        //TODO
-        //go through the expression Tree
-        //if Node is operatorNode -> if both children are number nodes -> calculate and replace operator node with number node
-        //construct new tree
-    }
-
-    void calculateValue(){
+    private void calculateValue(){
         try {
             Double oldValue = this.value;
             this.value = expressionTree.calculateValue();
@@ -50,10 +40,8 @@ public class Square {
             }
         } catch (ParseException | ExpressionCalculationException e) {
             this.status = Status.ERROR;
-            return;
         } catch (CellNotInitializedException e) {
             this.status = Status.NOT_INITIALIZED;
-            return;
         }
     }
 
@@ -94,7 +82,7 @@ public class Square {
         return value;
     }
 
-    public String getExpression() { return expression; }
+    String getExpression() { return expression; }
 
     @Override
     public boolean equals(Object o) {
