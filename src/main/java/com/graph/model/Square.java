@@ -28,7 +28,7 @@ public class Square {
         this.dependencyGraph = new HashSet<>();
     }
 
-    public void initializeSquare(String expression, Node expressionTree){
+    public void initializeSquare(String expression, Node expressionTree) {
         this.expression = expression;
         this.expressionTree = expressionTree;
         Map<Integer, HashSet<Square>> calculationOrderMap = new HashMap<>();
@@ -122,7 +122,7 @@ public class Square {
         return value;
     }
 
-    public String getExpression() { return expression; }
+    String getExpression() { return expression; }
 
     @Override
     public boolean equals(Object o) {
@@ -136,9 +136,5 @@ public class Square {
     public int hashCode() {
 
         return Objects.hash(name);
-    }
-
-    public void setValue(Double value) {
-        this.value = value;
     }
 }
