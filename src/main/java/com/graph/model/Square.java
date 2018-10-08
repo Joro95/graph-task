@@ -1,17 +1,14 @@
 package com.graph.model;
 
+import com.graph.ThreadPoolSquareExecutor;
 import com.graph.exception.CellNotInitializedException;
 import com.graph.exception.CircularDependenciesException;
-import com.graph.exception.ExpressionCalculationException;
 import com.graph.exception.ParseException;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.*;
 
-public class Square {
+public class Square implements Runnable, Callable{
 
     private String name;
     private Status status;
@@ -28,11 +25,39 @@ public class Square {
         this.dependencyGraph = new HashSet<>();
     }
 
-    public void initializeSquare(String expression, Node expressionTree){
+    @Override
+    public void run() {
+        try {
+            this.value = expressionTree.calculateValue();
+            this.status = Status.INITIALIZED;
+        } catch (CellNotInitializedException e) {
+            this.status = Status.NOT_INITIALIZED;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void initializeSquare(String expression, Node expressionTree) throws InterruptedException {
         this.expression = expression;
         this.expressionTree = expressionTree;
         Map<Integer, HashSet<Square>> calculationOrderMap = new HashMap<>();
         addToCalculationOrderMap(calculationOrderMap, new HashSet<>(), 0);
+        updateObservers(calculationOrderMap);
+    }
+
+    private void updateObservers(Map<Integer, HashSet<Square>> calculationOrderMap) throws InterruptedException {
+        //iterate over map
+        //executor run() on each square
+        //check if all square updates are completed before going to the next layer
+        ExecutorService executor = ThreadPoolSquareExecutor.getExecutor();
+        for (Map.Entry<Integer, HashSet<Square>> entry : calculationOrderMap.entrySet()) {
+            Collection<Callable<Square>> tasksToBeCompleted = new ArrayList<>();
+            for (Square square : entry.getValue()) {
+                tasksToBeCompleted.add(square);
+                executor.execute(square);
+            }
+            executor.invokeAll(tasksToBeCompleted);
+        }
     }
 
     void addToCalculationOrderMap(Map<Integer, HashSet<Square>> calculationOrderMap, Set<Square> analyzedSquares, int level){
@@ -106,6 +131,11 @@ public class Square {
         }
     }
 
+    @Override
+    public Object call() throws Exception {
+        return this;
+    }
+
     public enum Status{
         INITIALIZED,
         NOT_INITIALIZED,
@@ -124,7 +154,7 @@ public class Square {
         return value;
     }
 
-    public String getExpression() { return expression; }
+    String getExpression() { return expression; }
 
     @Override
     public boolean equals(Object o) {
@@ -138,9 +168,5 @@ public class Square {
     public int hashCode() {
 
         return Objects.hash(name);
-    }
-
-    public void setValue(Double value) {
-        this.value = value;
     }
 }

@@ -1,7 +1,9 @@
 package com.graph;
 
+import com.graph.exception.CellNotInitializedException;
 import com.graph.exception.CircularDependenciesException;
 import com.graph.exception.InvalidInputException;
+import com.graph.exception.ParseException;
 import com.graph.facade.GraphFacade;
 import com.graph.facade.GraphPrinter;
 
@@ -44,9 +46,18 @@ public class Application {
                 System.out.println("*                     ABORTING LAST OPERATION                      *");
                 System.out.println("********************************************************************");
                 System.out.println();
+            } catch (ParseException e) {
+                e.printStackTrace();
+                System.out.println();
+                System.out.println("********************************************************************");
+                System.out.println("*                  THE PARSING WAS NOT COMPLETED                   *");
+                System.out.println("*                     ABORTING LAST OPERATION                      *");
+                System.out.println("********************************************************************");
+                System.out.println();
+            } catch (CellNotInitializedException e) {
+                e.printStackTrace();
             }
         }
-
     }
 
     private static void printWelcomePage() {

@@ -1,7 +1,9 @@
 package com.graph.facade;
 
+import com.graph.exception.CellNotInitializedException;
 import com.graph.exception.CircularDependenciesException;
 import com.graph.exception.InvalidInputException;
+import com.graph.exception.ParseException;
 import com.graph.model.Graph;
 import com.graph.model.Node;
 import com.graph.model.Square;
@@ -28,7 +30,7 @@ public class GraphFacade {
         return graphFacade;
     }
 
-    public void processExpression(String input) throws InvalidInputException, CircularDependenciesException {
+    public void processExpression(String input) throws InvalidInputException, CircularDependenciesException, CellNotInitializedException, ParseException {
         validateInputString(input);
 
         String squareName = getSquareName(input);

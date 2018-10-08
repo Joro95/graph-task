@@ -9,30 +9,67 @@ public class InputParser {
         throw new IllegalStateException();
     }
 
+    public static String getExpression(String input) {
+        input = trimInput(input);
+        return input.substring(input.indexOf('=') + 1, input.length());
+    }
+
     public static String getSquareName(String input) {
         return input.substring(0, input.indexOf('='));
     }
 
-    public static String removeWhitespaces(String input) {
+    static String removeWhitespaces(String input) {
         return input.replace(" ", "");
     }
 
-    public static String replaceConsecutivePlusMinus(String input) {
-        //TODO
+    static String replaceConsecutivePlusMinus(String input) {
         //if consecutive '+' and '-' -> if '-' count is an even number then replace substring with '+', if not -> replace substring with '-'
-        String parsedInput = input;
-        return parsedInput;
+        StringBuilder sb = new StringBuilder(input);
+        for(int i = 0; i < sb.length(); i++) {
+            if(isPlusOrMinus(sb.charAt(i))){
+                String stringOfPlusesAndMinuses = createPlusAndMinusSubstring(sb.substring(i));
+                String symbolToReplaceWith = findEvenOrOddMinuses(stringOfPlusesAndMinuses);
+                sb.delete(i, i + stringOfPlusesAndMinuses.length());
+                sb.insert(i, symbolToReplaceWith);
+            }
+        }
+        return sb.toString();
     }
 
-    public static String trimInput(String input) {
-        String result = new String(input);
+    private static String findEvenOrOddMinuses(String stringOfPlusesAndMinuses) {
+        int count = 0;
+        for (int i = 0; i < stringOfPlusesAndMinuses.length(); i++) {
+            if(stringOfPlusesAndMinuses.charAt(i) == '-') {
+                count++;
+            }
+        }
+        return count % 2 == 0 ? "+" : "-";
+    }
+
+    private static String createPlusAndMinusSubstring(String substring) {
+        StringBuilder sb = new StringBuilder("");
+        for(int i = 0; i < substring.length(); i++) {
+            if(!isPlusOrMinus(substring.charAt(i))) {
+                break;
+            }
+            sb.append(substring.charAt(i));
+        }
+        return sb.toString();
+    }
+
+    private static boolean isPlusOrMinus(char c) {
+        return c == '+' || c == '-';
+    }
+
+    private static String trimInput(String input) {
+        String result = input;
         result = replaceConsecutivePlusMinus(result);
         result = removeWhitespaces(result);
-        result = changeStartingSigns(result);
+        result = refactorNegativeNumbersAndReferences(result);
         return result;
     }
 
-    public static String changeStartingSigns(String input) {
+    private static String refactorNegativeNumbersAndReferences(String input) {
         StringBuilder sb = new StringBuilder(input);
         char startingSymbol = sb.charAt(0);
 
@@ -66,10 +103,5 @@ public class InputParser {
             }
         }
         return index;
-    }
-
-    public static String getExpression(String input) {
-        input = trimInput(input);
-        return input.substring(input.indexOf('=') + 1, input.length());
     }
 }
