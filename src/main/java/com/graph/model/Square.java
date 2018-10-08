@@ -36,6 +36,11 @@ public class Square {
     }
 
     void addToCalculationOrderMap(Map<Integer, HashSet<Square>> calculationOrderMap, Set<Square> analyzedSquares, int level){
+        for (Square square : dependencyGraph){
+            if (square.getStatus() != Status.INITIALIZED) {
+                return;
+            }
+        }
         if (!calculationOrderMap.containsKey(level)){
             calculationOrderMap.put(level, new HashSet<>());
         }
@@ -44,6 +49,9 @@ public class Square {
         }
         analyzedSquares.add(this);
         calculationOrderMap.get(level).add(this);
+        for (Square square : observersGraph){
+            square.addToCalculationOrderMap(calculationOrderMap, analyzedSquares, ++level);
+        }
     }
 
     private void deleteExistingEntry(Map<Integer, HashSet<Square>> calculationOrderMap) {
@@ -77,12 +85,6 @@ public class Square {
 //        }
 //        updatedSquares.add(this);
 //    }
-
-    void recalculateObservers(Set<Square> updatedSquares){
-        for (Square square : observersGraph){
-//            square.addToCalculationOrderMap();
-        }
-    }
 
     public void addObserver(Square observer){
         observersGraph.add(observer);
