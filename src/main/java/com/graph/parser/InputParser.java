@@ -10,7 +10,6 @@ public class InputParser {
     }
 
     public static String getExpression(String input) {
-        input = trimInput(input);
         return input.substring(input.indexOf('=') + 1, input.length());
     }
 
@@ -61,10 +60,10 @@ public class InputParser {
         return c == '+' || c == '-';
     }
 
-    private static String trimInput(String input) {
+    public static String trimInput(String input) {
         String result = input;
-        result = replaceConsecutivePlusMinus(result);
         result = removeWhitespaces(result);
+        result = replaceConsecutivePlusMinus(result);
         result = refactorNegativeNumbersAndReferences(result);
         return result;
     }

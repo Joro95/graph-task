@@ -37,7 +37,7 @@ public class ExpressionTreeBuilder {
      * @throws CellNotInitializedException
      * @throws ParseException
      */
-    public static Node constructTree(String postfix, Graph graph, Square observer) throws InvalidInputException, CircularDependenciesException, CellNotInitializedException, ParseException {
+    public static Node constructTree(String postfix, Graph graph, Square observer) throws InvalidInputException, CircularDependenciesException, ParseException {
         Deque<Node> st = new ArrayDeque<>();
         Node node = null;
 
@@ -97,7 +97,11 @@ public class ExpressionTreeBuilder {
                 ((OperatorNode) node).setRightChildNode(rightChildNode);
 
                 if(rightChildNode instanceof NumberNode && leftChildNode instanceof NumberNode) {
-                    node = new NumberNode(node.calculateValue());
+                    try {
+                        node = new NumberNode(node.calculateValue());
+                    } catch (CellNotInitializedException e) {
+                        //this will never happen
+                    }
                 }
 
                 // Add this subexpression to stack

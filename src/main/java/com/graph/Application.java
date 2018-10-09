@@ -31,7 +31,7 @@ public class Application {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Please enter statement like <cell>=<expression>:");
             System.out.print("statement: ");
-            String input = scanner.next();
+            String input = scanner.nextLine();
             try {
                 graphFacade.processExpression(input);
             } catch (InvalidInputException e) {
@@ -48,7 +48,6 @@ public class Application {
                 System.out.println("********************************************************************");
                 System.out.println();
             } catch (ParseException e) {
-                e.printStackTrace();
                 System.out.println();
                 System.out.println("********************************************************************");
                 System.out.println("*                  THE PARSING WAS NOT COMPLETED                   *");
@@ -56,7 +55,7 @@ public class Application {
                 System.out.println("********************************************************************");
                 System.out.println();
             } catch (CellNotInitializedException e) {
-                e.printStackTrace();
+
             }
         }
     }
