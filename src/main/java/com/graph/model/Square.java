@@ -6,8 +6,16 @@ import com.graph.exception.CircularDependenciesException;
 import com.graph.exception.ExpressionCalculationException;
 import com.graph.exception.ParseException;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 public class Square implements Runnable{
 
@@ -73,9 +81,7 @@ public class Square implements Runnable{
         ExecutorService executor = ThreadPoolSquareExecutor.getExecutor();
         for (Map.Entry<Integer, HashSet<Square>> entry : calculationOrderMap.entrySet()) {
             List<Future> futures = new ArrayList<>();
-            Collection<Runnable> tasksToBeCompleted = new ArrayList<>();
             for (Square square : entry.getValue()) {
-                tasksToBeCompleted.add(square);
                 Future future = executor.submit(square);
                 futures.add(future);
             }
@@ -85,7 +91,7 @@ public class Square implements Runnable{
         }
     }
 
-    void addToCalculationOrderMap(Map<Integer, HashSet<Square>> calculationOrderMap, Set<Square> analyzedSquares, int level){
+    private void addToCalculationOrderMap(Map<Integer, HashSet<Square>> calculationOrderMap, Set<Square> analyzedSquares, int level){
         if(level > 0){
             if (!calculationOrderMap.containsKey(level)){
                 calculationOrderMap.put(level, new HashSet<>());

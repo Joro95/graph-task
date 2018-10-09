@@ -13,7 +13,8 @@ import java.util.concurrent.ExecutionException;
 import static com.graph.finder.SquareFinder.getSquare;
 import static com.graph.parser.ExpressionParser.infixToPostfix;
 import static com.graph.parser.ExpressionTreeBuilder.constructTree;
-import static com.graph.parser.InputParser.*;
+import static com.graph.parser.InputParser.getExpression;
+import static com.graph.parser.InputParser.getSquareName;
 import static com.graph.validator.Validator.validateInputString;
 
 public class GraphFacade {

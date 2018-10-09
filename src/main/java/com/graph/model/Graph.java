@@ -1,6 +1,8 @@
 package com.graph.model;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import static com.graph.converter.Converter.rowColumnToName;
 
 public class Graph {
@@ -17,7 +19,7 @@ public class Graph {
         }
     }
 
-    public ArrayList<ArrayList<Square>> getGraph() {
+    public List<ArrayList<Square>> getGraph() {
         return graph;
     }
 

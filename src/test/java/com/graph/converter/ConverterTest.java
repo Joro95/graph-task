@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.util.Map;
 
-import static com.graph.converter.Converter.getColumnNumber;
 import static com.graph.converter.Converter.squareNameToColumnRow;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -29,26 +28,6 @@ public class ConverterTest {
     @Test(expected = InvalidInputException.class)
     public void squareNameToColumnRowThrowsExceptionOnWrongName() throws InvalidInputException {
         squareNameToColumnRow("b33a");
-    }
-
-    //******* GET COLUMN NUMBER TESTS **************
-
-    @Test
-    public void getColumnNumberWithOneLetter(){
-        //Act
-        int result = getColumnNumber("E");
-
-        //Assert
-        assertEquals(4, result);
-    }
-
-    @Test
-    public void getColumnNumberWithTwoLetters(){
-        //Act
-        int result = getColumnNumber("CD");
-
-        //Assert
-        assertEquals(81, result);
     }
 
 }

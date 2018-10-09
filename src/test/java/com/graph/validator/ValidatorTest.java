@@ -59,11 +59,8 @@ public class ValidatorTest {
 
     @Test
     public void checkBracketPairsValidatesIfAllBracketsAreClosed() throws Exception {
-        String expected = "(2*23)";
         String inputString = "(2*23)";
-        String actual = Whitebox.invokeMethod(Validator.class, "checkBracketPairs", inputString);
-
-        assertEquals("The bracket check did not pass correctly", expected, actual);
+        Whitebox.invokeMethod(Validator.class, "checkBracketPairs", inputString);
     }
 
     @Test(expected = InvalidInputException.class)
