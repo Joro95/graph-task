@@ -7,20 +7,20 @@ import static com.graph.converter.Converter.rowColumnToName;
 
 public class Graph {
 
-    private ArrayList<ArrayList<Square>> graph;
+    private ArrayList<ArrayList<Square>> tableOfSquares;
 
     public Graph(){
-        graph = new ArrayList<>();
+        tableOfSquares = new ArrayList<>();
         for (int i = 1; i<999; i++){
-            graph.add(new ArrayList<>());
+            tableOfSquares.add(new ArrayList<>());
             for (int j = 0; j<=702; j++){
-                graph.get(i-1).add(new Square(rowColumnToName(i, j), Square.Status.NOT_INITIALIZED));
+                tableOfSquares.get(i-1).add(new Square(rowColumnToName(i, j), Square.Status.NOT_INITIALIZED));
             }
         }
     }
 
-    public List<ArrayList<Square>> getGraph() {
-        return graph;
+    public List<ArrayList<Square>> getTableOfSquares() {
+        return tableOfSquares;
     }
 
 }

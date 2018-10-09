@@ -12,9 +12,9 @@ public class GraphTest {
     @Test
     public void graphConstructorTest(){
         Graph graph = new Graph();
-        assertEquals("A1", graph.getGraph().get(0).get(0).getName());
-        assertEquals("AA12", graph.getGraph().get(11).get(26).getName());
-        for (ArrayList<Square> i : graph.getGraph()){
+        assertEquals("A1", graph.getTableOfSquares().get(0).get(0).getName());
+        assertEquals("AA12", graph.getTableOfSquares().get(11).get(26).getName());
+        for (ArrayList<Square> i : graph.getTableOfSquares()){
             for (Square square : i){
                 assertNotNull(square);
                 assertEquals(Square.Status.NOT_INITIALIZED, square.getStatus());

@@ -46,7 +46,7 @@ public class GraphPrinter {
 
     private void printSquares(int row, int column, Graph graph) {
         if (column % 2 == 0){
-            Square square = graph.getGraph().get(row / 2 - 1).get(column / 2 - 1);
+            Square square = graph.getTableOfSquares().get(row / 2 - 1).get(column / 2 - 1);
             switch (square.getStatus()){
                 case INITIALIZED:
                     printSquareValue(square);

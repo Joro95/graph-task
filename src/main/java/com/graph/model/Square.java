@@ -1,6 +1,6 @@
 package com.graph.model;
 
-import com.graph.SquareExecutorService;
+import com.graph.executor.SquareExecutorService;
 import com.graph.exception.CellNotInitializedException;
 import com.graph.exception.CircularDependenciesException;
 import com.graph.exception.ExpressionCalculationException;
@@ -47,6 +47,13 @@ public class Square implements Runnable {
         }
     }
 
+    public void clearDependencies() {
+        for (Square square : this.dependencyGraph) {
+            square.clearObserver(this);
+        }
+        this.dependencyGraph.clear();
+    }
+
     public void initializeSquare(String expression, Node expressionTree) throws InterruptedException, ExecutionException {
         this.expression = expression;
         this.expressionTree = expressionTree;
@@ -79,6 +86,10 @@ public class Square implements Runnable {
             }
             sq.checkForCircularDependencies(square);
         }
+    }
+
+    private void clearObserver(Square square) {
+        this.observersGraph.remove(square);
     }
 
     private void calculateValue() {
