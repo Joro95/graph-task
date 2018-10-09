@@ -7,10 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Map;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SquareFinderTest {
@@ -30,23 +27,5 @@ public class SquareFinderTest {
         assertEquals(Square.Status.NOT_INITIALIZED, square.getStatus());
 
     }
-
-    //******* SQUARE NAME TO COLUMN AND ROW TESTS **************
-//    @Test
-//    public void squareNameToColumnRowExpectMapThatContainsBoth() throws InvalidInputException {
-//        //Act
-//        Map<String, Integer> result = SquareFinder.squareNameToColumnRow("b3");
-//
-//        //Assert
-//        assertTrue(result.containsKey("column"));
-//        assertTrue(result.containsKey("row"));
-//        assertEquals(1, result.get("column").intValue());
-//        assertEquals(2, result.get("row").intValue());
-//    }
-
-//    @Test(expected = InvalidInputException.class)
-//    public void squareNameToColumnRowThrowsExceptionOnWrongName() throws InvalidInputException {
-//        SquareFinder.squareNameToColumnRow("b33a");
-//    }
 
 }

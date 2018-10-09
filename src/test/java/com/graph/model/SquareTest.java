@@ -1,6 +1,7 @@
 package com.graph.model;
 
 import com.graph.exception.CellNotInitializedException;
+import com.graph.exception.CircularDependenciesException;
 import com.graph.exception.ParseException;
 import org.junit.Test;
 
@@ -33,32 +34,69 @@ public class SquareTest {
         Square squareA = new Square("A1", Square.Status.NOT_INITIALIZED);
         Square squareB = new Square("B1", Square.Status.NOT_INITIALIZED);
         Square squareC = new Square("C1", Square.Status.NOT_INITIALIZED);
-        squareA.addDependency(squareB);
-        squareA.addDependency(squareC);
+        squareB.addDependency(squareA);
         squareB.addDependency(squareC);
-        squareB.addObserver(squareA);
+        squareA.addDependency(squareC);
+        squareA.addObserver(squareB);
         squareC.addObserver(squareA);
         squareC.addObserver(squareB);
-        Node expressionTreeA = createExpressionTreeForA(squareB, squareC);
-        Node expressionTreeB = spy(new ReferenceNode(squareC));
+        Node expressionTreeB = createExpressionTreeForLeaf(squareA, squareC);
+        Node expressionTreeA = spy(new ReferenceNode(squareC));
         Node expressionTreeC = spy(new NumberNode(5));
 
         //Act
-        squareA.initializeSquare("B1+C1", expressionTreeA);
-        squareB.initializeSquare("C1", expressionTreeB);
+        squareB.initializeSquare("A1+C1", expressionTreeB);
+        squareA.initializeSquare("C1", expressionTreeA);
         squareC.initializeSquare("5", expressionTreeC);
 
         //Assert
         verify(expressionTreeA).calculateValue();
-        verify(expressionTreeC).calculateValue();
         verify(expressionTreeB).calculateValue();
-
+        verify(expressionTreeC).calculateValue();
+        //The following asserts are to verify that the hashCode method hasn't been modified
+        assertEquals(2095, squareA.hashCode());
+        assertEquals(2126, squareB.hashCode());
+        assertEquals(2157, squareC.hashCode());
     }
 
-    private Node createExpressionTreeForA(Square squareB, Square squareC) {
+    @Test
+    public void checkForCircularDependenciesNoException() throws CircularDependenciesException {
+        //Arrange
+        Square square = new Square("A1", Square.Status.NOT_INITIALIZED);
+        Square square1 = new Square("A2", Square.Status.NOT_INITIALIZED);
+        Square square2 = new Square("A3", Square.Status.NOT_INITIALIZED);
+        square.addObserver(square1);
+
+        //Act
+        square.checkForCircularDependencies(square2);
+    }
+
+    @Test(expected = CircularDependenciesException.class)
+    public void checkForCircularDependenciesThrowsException() throws CircularDependenciesException {
+        //Arrange
+        Square square = new Square("A1", Square.Status.NOT_INITIALIZED);
+        Square square1 = new Square("A2", Square.Status.NOT_INITIALIZED);
+        Square square2 = new Square("A3", Square.Status.NOT_INITIALIZED);
+        square.addObserver(square1);
+        square1.addObserver(square2);
+
+        //Act
+        square.checkForCircularDependencies(square2);
+    }
+
+    @Test(expected = CircularDependenciesException.class)
+    public void checkForCircularDependenciesThrowsExceptionWhenIsSelfReferencedException() throws CircularDependenciesException {
+        //Arrange
+        Square square = new Square("A1", Square.Status.NOT_INITIALIZED);
+
+        //Act
+        square.checkForCircularDependencies(square);
+    }
+
+    private Node createExpressionTreeForLeaf(Square square1, Square square2) {
         Node node = spy(new OperatorNode('+'));
-        ((OperatorNode) node).setLeftChildNode(new ReferenceNode(squareB));
-        ((OperatorNode) node).setRightChildNode(new ReferenceNode(squareC));
+        ((OperatorNode) node).setLeftChildNode(new ReferenceNode(square1));
+        ((OperatorNode) node).setRightChildNode(new ReferenceNode(square2));
         return node;
     }
 
@@ -79,6 +117,4 @@ public class SquareTest {
         operatorNode.setLeftChildNode(numNode1);
         return operatorNode;
     }
-
-
 }

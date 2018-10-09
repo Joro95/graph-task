@@ -4,8 +4,6 @@ import com.graph.exception.InvalidInputException;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 
-import static org.junit.Assert.assertEquals;
-
 public class ValidatorTest {
     
     //******* VALIDATE SQUARE NAME TESTS **************

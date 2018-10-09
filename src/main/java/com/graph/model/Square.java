@@ -42,7 +42,6 @@ public class Square implements Runnable{
     }
 
     public void initializeSquare(String expression, Node expressionTree) throws InterruptedException, ExecutionException {
-        long x = System.currentTimeMillis();
         this.expression = expression;
         this.expressionTree = expressionTree;
         Double oldValue = this.value;
@@ -54,7 +53,6 @@ public class Square implements Runnable{
                 recalculateObserversExpressionTree(calculationOrderMap);
             }
         }
-        System.out.println(System.currentTimeMillis() - x);
     }
 
     private boolean allFieldsInitialized() {

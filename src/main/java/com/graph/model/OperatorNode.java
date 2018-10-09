@@ -16,7 +16,6 @@ public class OperatorNode implements Node {
 
     @Override
     public double calculateValue() throws ParseException, CellNotInitializedException {
-        //right child value always exists, however the same is not true for left child
         double leftChildValue = leftChildNode.calculateValue();
         double rightChildValue = rightChildNode.calculateValue();
         switch (data){
