@@ -5,6 +5,8 @@ import com.graph.exception.ExpressionCalculationException;
 import com.graph.exception.ParseException;
 import org.junit.Test;
 
+import java.util.concurrent.ExecutionException;
+
 import static org.junit.Assert.assertEquals;
 
 public class NodeTest {
@@ -22,7 +24,7 @@ public class NodeTest {
     }
 
     @Test
-    public void referenceNodeCalculateValueTest() throws CellNotInitializedException, ParseException, ExpressionCalculationException {
+    public void referenceNodeCalculateValueTest() throws CellNotInitializedException, ParseException, ExpressionCalculationException, InterruptedException, ExecutionException {
         //Arrange
         Square square = new Square("A1", Square.Status.INITIALIZED);
         square.initializeSquare("", new NumberNode(5));

@@ -3,12 +3,21 @@ package com.graph.model;
 import com.graph.ThreadPoolSquareExecutor;
 import com.graph.exception.CellNotInitializedException;
 import com.graph.exception.CircularDependenciesException;
+import com.graph.exception.ExpressionCalculationException;
 import com.graph.exception.ParseException;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
-public class Square implements Runnable, Callable{
+public class Square implements Runnable{
 
     private String name;
     private Status status;
@@ -27,48 +36,73 @@ public class Square implements Runnable, Callable{
 
     @Override
     public void run() {
+        if(allFieldsInitialized()) {
+            calculateValue();
+        }
+    }
+
+    public void initializeSquare(String expression, Node expressionTree) throws InterruptedException, ExecutionException {
+        this.expression = expression;
+        this.expressionTree = expressionTree;
+        Double oldValue = this.value;
+        if (allFieldsInitialized()) {
+            calculateValue();
+            if ((oldValue == null || !oldValue.equals(this.value)) && !this.observersGraph.isEmpty()) {
+                Map<Integer, HashSet<Square>> calculationOrderMap = new HashMap<>();
+                addToCalculationOrderMap(calculationOrderMap, new HashSet<>(), 0);
+                recalculateObserversExpressionTree(calculationOrderMap);
+            }
+        }
+    }
+
+    private boolean allFieldsInitialized() {
+        for(Square square : dependencyGraph){
+            if (square.getStatus() != Status.INITIALIZED){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void calculateValue(){
         try {
             this.value = expressionTree.calculateValue();
             this.status = Status.INITIALIZED;
         } catch (CellNotInitializedException e) {
             this.status = Status.NOT_INITIALIZED;
-        } catch (ParseException e) {
-            e.printStackTrace();
+        } catch (ParseException | ExpressionCalculationException e) {
+            this.status = Status.ERROR;
         }
     }
 
-    public void initializeSquare(String expression, Node expressionTree) throws InterruptedException {
-        this.expression = expression;
-        this.expressionTree = expressionTree;
-        Map<Integer, HashSet<Square>> calculationOrderMap = new HashMap<>();
-        addToCalculationOrderMap(calculationOrderMap, new HashSet<>(), 0);
-        updateObservers(calculationOrderMap);
-    }
-
-    private void updateObservers(Map<Integer, HashSet<Square>> calculationOrderMap) throws InterruptedException {
-        //iterate over map
-        //executor run() on each square
-        //check if all square updates are completed before going to the next layer
+    private void recalculateObserversExpressionTree(Map<Integer, HashSet<Square>> calculationOrderMap) throws InterruptedException, ExecutionException {
         ExecutorService executor = ThreadPoolSquareExecutor.getExecutor();
         for (Map.Entry<Integer, HashSet<Square>> entry : calculationOrderMap.entrySet()) {
-            Collection<Callable<Square>> tasksToBeCompleted = new ArrayList<>();
+            List<Future> futures = new ArrayList<>();
             for (Square square : entry.getValue()) {
-                tasksToBeCompleted.add(square);
-                executor.execute(square);
+                Future future = executor.submit(square);
+                futures.add(future);
             }
-            executor.invokeAll(tasksToBeCompleted);
+            for (Future future : futures){
+                future.get();
+            }
         }
     }
 
-    void addToCalculationOrderMap(Map<Integer, HashSet<Square>> calculationOrderMap, Set<Square> analyzedSquares, int level){
-        if (!calculationOrderMap.containsKey(level)){
-            calculationOrderMap.put(level, new HashSet<>());
+    private void addToCalculationOrderMap(Map<Integer, HashSet<Square>> calculationOrderMap, Set<Square> analyzedSquares, int level){
+        if(level > 0){
+            if (!calculationOrderMap.containsKey(level)){
+                calculationOrderMap.put(level, new HashSet<>());
+            }
+            if (analyzedSquares.contains(this)){
+                deleteExistingEntry(calculationOrderMap);
+            }
+            analyzedSquares.add(this);
+            calculationOrderMap.get(level).add(this);
         }
-        if (analyzedSquares.contains(this)){
-            deleteExistingEntry(calculationOrderMap);
+        for (Square square : observersGraph){
+            square.addToCalculationOrderMap(calculationOrderMap, analyzedSquares, ++level);
         }
-        analyzedSquares.add(this);
-        calculationOrderMap.get(level).add(this);
     }
 
     private void deleteExistingEntry(Map<Integer, HashSet<Square>> calculationOrderMap) {
@@ -77,35 +111,6 @@ public class Square implements Runnable, Callable{
                 squareSet.remove(this);
                 return;
             }
-        }
-    }
-
-//    void calculateValue(Set<Square> updatedSquares){
-//        for (Square square : dependencyGraph){
-//            if (square.getStatus() != Status.INITIALIZED){
-//                return;
-//            }
-//        }
-//        if (!updatedSquares.contains(this)) {
-//            try {
-//                Double oldValue = this.value;
-//                this.value = expressionTree.calculateValue();
-//                this.status = Status.INITIALIZED;
-//                if ((oldValue == null || !oldValue.equals(this.value)) && !this.observersGraph.isEmpty()) {
-//                    recalculateObservers(updatedSquares);
-//                }
-//            } catch (ParseException | ExpressionCalculationException e) {
-//                this.status = Status.ERROR;
-//            } catch (CellNotInitializedException e) {
-//                this.status = Status.NOT_INITIALIZED;
-//            }
-//        }
-//        updatedSquares.add(this);
-//    }
-
-    void recalculateObservers(Set<Square> updatedSquares){
-        for (Square square : observersGraph){
-//            square.addToCalculationOrderMap();
         }
     }
 
@@ -129,11 +134,6 @@ public class Square implements Runnable, Callable{
         }
     }
 
-    @Override
-    public Object call() throws Exception {
-        return this;
-    }
-
     public enum Status{
         INITIALIZED,
         NOT_INITIALIZED,
@@ -152,7 +152,9 @@ public class Square implements Runnable, Callable{
         return value;
     }
 
-    String getExpression() { return expression; }
+    public String getExpression() {
+        return expression;
+    }
 
     @Override
     public boolean equals(Object o) {

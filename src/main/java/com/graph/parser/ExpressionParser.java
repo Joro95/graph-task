@@ -4,6 +4,10 @@ import java.util.Stack;
 
 public class ExpressionParser {
 
+    private ExpressionParser(){
+        throw new IllegalStateException();
+    }
+
     public static String infixToPostfix(String expression) {
         String result = "";
 
