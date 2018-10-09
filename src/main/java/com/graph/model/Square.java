@@ -1,6 +1,6 @@
 package com.graph.model;
 
-import com.graph.ThreadPoolSquareExecutor;
+import com.graph.SquareExecutorService;
 import com.graph.exception.CellNotInitializedException;
 import com.graph.exception.CircularDependenciesException;
 import com.graph.exception.ParseException;
@@ -49,7 +49,7 @@ public class Square implements Runnable, Callable{
         //iterate over map
         //executor run() on each square
         //check if all square updates are completed before going to the next layer
-        ExecutorService executor = ThreadPoolSquareExecutor.getExecutor();
+        ExecutorService executor = SquareExecutorService.getExecutor();
         for (Map.Entry<Integer, HashSet<Square>> entry : calculationOrderMap.entrySet()) {
             Collection<Callable<Square>> tasksToBeCompleted = new ArrayList<>();
             for (Square square : entry.getValue()) {
