@@ -4,6 +4,8 @@ import com.graph.exception.CellNotInitializedException;
 import com.graph.exception.ParseException;
 import org.junit.Test;
 
+import java.util.concurrent.ExecutionException;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -11,7 +13,7 @@ import static org.mockito.Mockito.verify;
 public class SquareTest {
 
     @Test
-    public void initializeSquareWithValidExpression(){
+    public void initializeSquareWithValidExpression() throws InterruptedException, ExecutionException {
         //Arrange
         Square square = new Square("A1", Square.Status.NOT_INITIALIZED);
         Node expressionTree = createExpressionTree();
@@ -26,7 +28,7 @@ public class SquareTest {
     }
 
     @Test
-    public void calculateSquareWithoutUnnecessaryCalculations() throws CellNotInitializedException, ParseException {
+    public void calculateSquareWithoutUnnecessaryCalculations() throws CellNotInitializedException, ParseException, InterruptedException, ExecutionException {
         //Arrange
         Square squareA = new Square("A1", Square.Status.NOT_INITIALIZED);
         Square squareB = new Square("B1", Square.Status.NOT_INITIALIZED);
@@ -48,8 +50,8 @@ public class SquareTest {
 
         //Assert
         verify(expressionTreeA).calculateValue();
-        verify(expressionTreeB).calculateValue();
         verify(expressionTreeC).calculateValue();
+        verify(expressionTreeB).calculateValue();
 
     }
 
@@ -60,7 +62,7 @@ public class SquareTest {
         return node;
     }
 
-    private Node createExpressionTree() {
+    private Node createExpressionTree() throws InterruptedException, ExecutionException {
         Square square = new Square("A2", Square.Status.INITIALIZED);
         square.initializeSquare("5", new NumberNode(5));
         Node refNode = new ReferenceNode(square);

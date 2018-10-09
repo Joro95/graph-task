@@ -8,6 +8,8 @@ import com.graph.model.Graph;
 import com.graph.model.Node;
 import com.graph.model.Square;
 
+import java.util.concurrent.ExecutionException;
+
 import static com.graph.finder.SquareFinder.getSquare;
 import static com.graph.parser.ExpressionParser.infixToPostfix;
 import static com.graph.parser.ExpressionTreeBuilder.constructTree;
@@ -30,7 +32,7 @@ public class GraphFacade {
         return graphFacade;
     }
 
-    public void processExpression(String input) throws InvalidInputException, CircularDependenciesException, CellNotInitializedException, ParseException {
+    public void processExpression(String input) throws InvalidInputException, CircularDependenciesException, CellNotInitializedException, ParseException, InterruptedException, ExecutionException {
         validateInputString(input);
 
         String squareName = getSquareName(input);
