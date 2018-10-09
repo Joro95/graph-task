@@ -17,7 +17,7 @@ public class SquareFinder {
 
     public static Square getSquare(String name, Graph graph) throws InvalidInputException {
         Map<String, Integer> coordinates = squareNameToColumnRow(name);
-        List<Square> columns = graph.getGraph().get(coordinates.get("row"));
+        List<Square> columns = graph.getTableOfSquares().get(coordinates.get("row"));
         return columns.get(coordinates.get("column"));
     }
 }

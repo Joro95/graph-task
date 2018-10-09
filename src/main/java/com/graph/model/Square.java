@@ -1,6 +1,6 @@
 package com.graph.model;
 
-import com.graph.ThreadPoolSquareExecutor;
+import com.graph.executor.SquareExecutorService;
 import com.graph.exception.CellNotInitializedException;
 import com.graph.exception.CircularDependenciesException;
 import com.graph.exception.ExpressionCalculationException;
@@ -17,7 +17,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-public class Square implements Runnable{
+public class Square implements Runnable {
+
+    public enum Status {
+        INITIALIZED,
+        NOT_INITIALIZED,
+        ERROR
+    }
 
     private String name;
     private Status status;
@@ -27,7 +33,7 @@ public class Square implements Runnable{
     private Set<Square> observersGraph;
     private Set<Square> dependencyGraph;
 
-    public Square(String name, Status status){
+    public Square(String name, Status status) {
         this.status = status;
         this.name = name;
         this.observersGraph = new HashSet<>();
@@ -36,9 +42,16 @@ public class Square implements Runnable{
 
     @Override
     public void run() {
-        if(allFieldsInitialized()) {
+        if (allFieldsInitialized()) {
             calculateValue();
         }
+    }
+
+    public void clearDependencies() {
+        for (Square square : this.dependencyGraph) {
+            square.clearObserver(this);
+        }
+        this.dependencyGraph.clear();
     }
 
     public void initializeSquare(String expression, Node expressionTree) throws InterruptedException, ExecutionException {
@@ -55,16 +68,31 @@ public class Square implements Runnable{
         }
     }
 
-    private boolean allFieldsInitialized() {
-        for(Square square : dependencyGraph){
-            if (square.getStatus() != Status.INITIALIZED){
-                return false;
-            }
-        }
-        return true;
+    public void addObserver(Square observer) {
+        observersGraph.add(observer);
     }
 
-    private void calculateValue(){
+    public void addDependency(Square dependency) {
+        dependencyGraph.add(dependency);
+    }
+
+    public void checkForCircularDependencies(Square square) throws CircularDependenciesException {
+        if (square.equals(this)) {
+            throw new CircularDependenciesException();
+        }
+        for (Square sq : this.observersGraph) {
+            if (sq.equals(square)) {
+                throw new CircularDependenciesException();
+            }
+            sq.checkForCircularDependencies(square);
+        }
+    }
+
+    private void clearObserver(Square square) {
+        this.observersGraph.remove(square);
+    }
+
+    private void calculateValue() {
         try {
             this.value = expressionTree.calculateValue();
             this.status = Status.INITIALIZED;
@@ -76,68 +104,51 @@ public class Square implements Runnable{
     }
 
     private void recalculateObserversExpressionTree(Map<Integer, HashSet<Square>> calculationOrderMap) throws InterruptedException, ExecutionException {
-        ExecutorService executor = ThreadPoolSquareExecutor.getExecutor();
+        ExecutorService executor = SquareExecutorService.getExecutor();
         for (Map.Entry<Integer, HashSet<Square>> entry : calculationOrderMap.entrySet()) {
             List<Future> futures = new ArrayList<>();
             for (Square square : entry.getValue()) {
                 Future future = executor.submit(square);
                 futures.add(future);
             }
-            for (Future future : futures){
+            for (Future future : futures) {
                 future.get();
             }
         }
     }
 
-    private void addToCalculationOrderMap(Map<Integer, HashSet<Square>> calculationOrderMap, Set<Square> analyzedSquares, int level){
-        if(level > 0){
-            if (!calculationOrderMap.containsKey(level)){
+    private void addToCalculationOrderMap(Map<Integer, HashSet<Square>> calculationOrderMap, Set<Square> analyzedSquares, int level) {
+        if (level > 0) {
+            if (!calculationOrderMap.containsKey(level)) {
                 calculationOrderMap.put(level, new HashSet<>());
             }
-            if (analyzedSquares.contains(this)){
+            if (analyzedSquares.contains(this)) {
                 deleteExistingEntry(calculationOrderMap);
             }
             analyzedSquares.add(this);
             calculationOrderMap.get(level).add(this);
         }
-        for (Square square : observersGraph){
+        for (Square square : observersGraph) {
             square.addToCalculationOrderMap(calculationOrderMap, analyzedSquares, ++level);
         }
     }
 
     private void deleteExistingEntry(Map<Integer, HashSet<Square>> calculationOrderMap) {
-        for (Set<Square> squareSet : calculationOrderMap.values()){
-            if (squareSet.contains(this)){
+        for (Set<Square> squareSet : calculationOrderMap.values()) {
+            if (squareSet.contains(this)) {
                 squareSet.remove(this);
                 return;
             }
         }
     }
 
-    public void addObserver(Square observer){
-        observersGraph.add(observer);
-    }
-
-    public void addDependency(Square dependency){
-        dependencyGraph.add(dependency);
-    }
-
-    public void checkForCircularDependencies(Square square) throws CircularDependenciesException {
-        if(square.equals(this)){
-            throw new CircularDependenciesException();
-        }
-        for (Square sq : this.observersGraph){
-            if (sq.equals(square)){
-                throw new CircularDependenciesException();
+    private boolean allFieldsInitialized() {
+        for (Square square : dependencyGraph) {
+            if (square.getStatus() != Status.INITIALIZED) {
+                return false;
             }
-            sq.checkForCircularDependencies(square);
         }
-    }
-
-    public enum Status{
-        INITIALIZED,
-        NOT_INITIALIZED,
-        ERROR
+        return true;
     }
 
     public String getName() {

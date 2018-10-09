@@ -40,7 +40,7 @@ public class ExpressionTreeBuilder {
     public static Node constructTree(String postfix, Graph graph, Square observer) throws InvalidInputException, CircularDependenciesException, ParseException {
         Deque<Node> st = new ArrayDeque<>();
         Node node = null;
-
+        observer.clearDependencies();
         for (int i = 0; i < postfix.length(); i++) {
 
             // If operand, simply push into stack
