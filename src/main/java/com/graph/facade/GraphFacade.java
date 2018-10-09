@@ -15,6 +15,7 @@ import static com.graph.parser.ExpressionParser.infixToPostfix;
 import static com.graph.parser.ExpressionTreeBuilder.constructTree;
 import static com.graph.parser.InputParser.getExpression;
 import static com.graph.parser.InputParser.getSquareName;
+import static com.graph.parser.InputParser.trimInput;
 import static com.graph.validator.Validator.validateInputString;
 
 public class GraphFacade {
@@ -34,8 +35,8 @@ public class GraphFacade {
     }
 
     public void processExpression(String input) throws InvalidInputException, CircularDependenciesException, CellNotInitializedException, ParseException, InterruptedException, ExecutionException {
+        input = trimInput(input);
         validateInputString(input);
-
         String squareName = getSquareName(input);
         String expression = getExpression(input);
 
