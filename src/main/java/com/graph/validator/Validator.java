@@ -2,14 +2,19 @@ package com.graph.validator;
 
 import com.graph.exception.InvalidInputException;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.EmptyStackException;
-import java.util.Stack;
 import java.util.regex.Pattern;
 
 public class Validator {
 
     private static final int COLUMN_MAX_SIZE = 2;
     private static final int ROW_MAX_SIZE = 3;
+
+    private Validator(){
+        throw new IllegalStateException();
+    }
 
     public static void validateInputString(String input) throws InvalidInputException {
         checkForEqualsSign(input);
@@ -43,9 +48,9 @@ public class Validator {
         }
     }
 
-    private static String checkBracketPairs(String input) throws InvalidInputException {
+    private static void checkBracketPairs(String input) throws InvalidInputException {
         //if input has incorrect number of opening and closing brackets -> throw exception
-        Stack<Character> brackets = new Stack<>();
+        Deque<Character> brackets = new ArrayDeque<>();
         try {
             for (int i = 0; i < input.length(); i++) {
                 char symbol = input.charAt(i);
@@ -62,10 +67,9 @@ public class Validator {
         } catch (EmptyStackException e) {
             throw new InvalidInputException();
         }
-        return input;
     }
 
-    private static String checkConsecutiveSymbols(String input) throws InvalidInputException {
+    private static void checkConsecutiveSymbols(String input) throws InvalidInputException {
         //if input has consecutive '/', '*' or '^' -> throw exception
         for (int i = 0; i < input.length(); i++) {
             if ((i < input.length() - 1 && isSymbol(input.charAt(i)) && isSymbol(input.charAt(i + 1)))
@@ -73,18 +77,16 @@ public class Validator {
                 throw new InvalidInputException();
             }
         }
-        return input;
     }
 
     private static boolean isSymbol(char c) {
         return c == '/' || c == '*' || c == '^';
     }
 
-    private static String checkForIllegalSigns(String input) throws InvalidInputException {
+    private static void checkForIllegalSigns(String input) throws InvalidInputException {
         //if there are illegal signs in the input -> throw exception
         if (!Pattern.matches("[a-zA-Z0-9+\\-*/()^=]*", input)) {
             throw new InvalidInputException();
         }
-        return input;
     }
 }

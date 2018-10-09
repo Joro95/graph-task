@@ -16,7 +16,6 @@ public class OperatorNode implements Node {
 
     @Override
     public double calculateValue() throws ParseException, CellNotInitializedException {
-        //right child value always exists, however the same is not true for left child
         double leftChildValue = leftChildNode.calculateValue();
         double rightChildValue = rightChildNode.calculateValue();
         switch (data){
@@ -42,14 +41,6 @@ public class OperatorNode implements Node {
         }
     }
 
-    public Node getLeftChildNode() {
-        return leftChildNode;
-    }
-
-    public Node getRightChildNode() {
-        return rightChildNode;
-    }
-
     public void setLeftChildNode(Node leftChildNode) {
         this.leftChildNode = leftChildNode;
     }
@@ -73,12 +64,12 @@ public class OperatorNode implements Node {
         if (!(o instanceof OperatorNode)) return false;
         OperatorNode that = (OperatorNode) o;
         return data == that.data &&
-                com.google.common.base.Objects.equal(getLeftChildNode(), that.getLeftChildNode()) &&
-                com.google.common.base.Objects.equal(getRightChildNode(), that.getRightChildNode());
+                com.google.common.base.Objects.equal(leftChildNode, that.leftChildNode) &&
+                com.google.common.base.Objects.equal(rightChildNode, that.rightChildNode);
     }
 
     @Override
     public int hashCode() {
-        return com.google.common.base.Objects.hashCode(getLeftChildNode(), getRightChildNode(), data);
+        return com.google.common.base.Objects.hashCode(leftChildNode, rightChildNode, data);
     }
 }

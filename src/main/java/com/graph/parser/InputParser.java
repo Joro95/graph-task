@@ -47,7 +47,7 @@ public class InputParser {
     }
 
     private static String createPlusAndMinusSubstring(String substring) {
-        StringBuilder sb = new StringBuilder("");
+        StringBuilder sb = new StringBuilder();
         for(int i = 0; i < substring.length(); i++) {
             if(!isPlusOrMinus(substring.charAt(i))) {
                 break;
@@ -80,15 +80,13 @@ public class InputParser {
         }
         for (int i = 0; i < sb.length(); i++) {
             char symbol = sb.charAt(i);
-            if (isOperator(sb.charAt(i)) && sb.charAt(i - 1) != ')') {
-                if (!isLetterOrDigit(sb.charAt(i - 1))) {
-                    sb.deleteCharAt(i);
-                    sb.insert(i, "(0" + symbol);
-                    i += 3;
-                    i = appendClosingBracketToNumber(i, sb);
-                    if(i == sb.length()-1){
-                        sb.append(')');
-                    }
+            if (isOperator(sb.charAt(i)) && sb.charAt(i - 1) != ')' && !isLetterOrDigit(sb.charAt(i - 1))) {
+                sb.deleteCharAt(i);
+                sb.insert(i, "(0" + symbol);
+                i += 3;
+                i = appendClosingBracketToNumber(i, sb);
+                if(i == sb.length()-1){
+                    sb.append(')');
                 }
             }
         }

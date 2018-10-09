@@ -4,9 +4,15 @@ import com.graph.exception.CellNotInitializedException;
 import com.graph.exception.CircularDependenciesException;
 import com.graph.exception.InvalidInputException;
 import com.graph.exception.ParseException;
-import com.graph.model.*;
+import com.graph.model.Graph;
+import com.graph.model.Node;
+import com.graph.model.NumberNode;
+import com.graph.model.OperatorNode;
+import com.graph.model.ReferenceNode;
+import com.graph.model.Square;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import static com.graph.finder.SquareFinder.getSquare;
 
@@ -32,8 +38,8 @@ public class ExpressionTreeBuilder {
      * @throws ParseException
      */
     public static Node constructTree(String postfix, Graph graph, Square observer) throws InvalidInputException, CircularDependenciesException, CellNotInitializedException, ParseException {
-        Stack<Node> st = new Stack<>();
-        Node node = null, leftChildNode, rightChildNode;
+        Deque<Node> st = new ArrayDeque<>();
+        Node node = null;
 
         for (int i = 0; i < postfix.length(); i++) {
 
@@ -84,8 +90,8 @@ public class ExpressionTreeBuilder {
 
                 // Pop two top nodes
                 // Store top
-                rightChildNode = st.pop();
-                leftChildNode = st.pop();
+                Node rightChildNode = st.pop();
+                Node leftChildNode = st.pop();
 
                 ((OperatorNode) node).setLeftChildNode(leftChildNode);
                 ((OperatorNode) node).setRightChildNode(rightChildNode);
@@ -113,7 +119,7 @@ public class ExpressionTreeBuilder {
     }
 
     private static String createReferenceName(String substring) {
-        StringBuilder sb = new StringBuilder("");
+        StringBuilder sb = new StringBuilder();
         for(int i = 0; i < substring.length(); i++) {
             if(!Character.isLetterOrDigit(substring.charAt(i))) {
                 break;
@@ -124,7 +130,7 @@ public class ExpressionTreeBuilder {
     }
 
     private static String createNumber(String substring) {
-        StringBuilder sb = new StringBuilder("");
+        StringBuilder sb = new StringBuilder();
         for(int i = 0; i < substring.length(); i++) {
             if(!Character.isDigit(substring.charAt(i))) {
                 break;

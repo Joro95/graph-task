@@ -8,6 +8,10 @@ import java.util.Map;
 
 public class Converter {
 
+    private Converter(){
+        throw new IllegalStateException();
+    }
+
     public static String columnToLetters(int column){
         String columnAsLetters = "";
         int firstLetterNumber = column / 26;
@@ -44,7 +48,7 @@ public class Converter {
         return getMapWithCoordinates(column, row);
     }
 
-    public static int getColumnNumber(String columnAsString) {
+    private static int getColumnNumber(String columnAsString) {
         char[] columnChars = columnAsString.toCharArray();
         int firstNumber = 0;
         int secondNumber;
@@ -58,7 +62,7 @@ public class Converter {
     }
 
     private static Map<String, Integer> getMapWithCoordinates(int column, int row) {
-        Map<String, Integer> coordinates = new HashMap<String, Integer>();
+        Map<String, Integer> coordinates = new HashMap<>();
         coordinates.put("column", column);
         coordinates.put("row", row);
         return coordinates;

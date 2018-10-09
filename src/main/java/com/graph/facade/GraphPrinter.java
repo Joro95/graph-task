@@ -123,7 +123,7 @@ public class GraphPrinter {
     }
 
     private double round(double value) {
-        BigDecimal bd = new BigDecimal(value);
+        BigDecimal bd = BigDecimal.valueOf(value);
         bd = bd.setScale(1, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
