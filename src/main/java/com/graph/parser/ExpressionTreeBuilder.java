@@ -26,16 +26,15 @@ public class ExpressionTreeBuilder {
         throw new IllegalStateException();
     }
 
-    /** Returns root of constructed tree for given postfix expression
-     *
-     * @param postfix
-     * @param graph
-     * @param observer
-     * @return
-     * @throws InvalidInputException
-     * @throws CircularDependenciesException
-     * @throws CellNotInitializedException
-     * @throws ParseException
+    /**
+     * @param postfix mathematical expression in postfix format example: from 3+3 -> 3 3+
+     * @param graph the graph in which the square resides
+     * @param observer the square in which the root of the tree will reside
+     * @return root of the constructed expression tree
+     * @throws InvalidInputException when the input cannot be read
+     * @throws CircularDependenciesException when we have example: A1=A1+3
+     * @throws CellNotInitializedException never thrown
+     * @throws ParseException when the given postifx expression is incorrect
      */
     public static Node constructTree(String postfix, Graph graph, Square observer) throws InvalidInputException, CircularDependenciesException, ParseException {
         Deque<Node> st = new ArrayDeque<>();
