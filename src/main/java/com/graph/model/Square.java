@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-public class Square implements Runnable {
+public class Square implements Runnable{
 
     public enum Status {
         INITIALIZED,
@@ -107,6 +107,7 @@ public class Square implements Runnable {
         ExecutorService executor = SquareExecutorService.getExecutor();
         for (Map.Entry<Integer, HashSet<Square>> entry : calculationOrderMap.entrySet()) {
             List<Future> futures = new ArrayList<>();
+
             for (Square square : entry.getValue()) {
                 Future future = executor.submit(square);
                 futures.add(future);
@@ -115,6 +116,11 @@ public class Square implements Runnable {
                 future.get();
             }
         }
+//        for (Map.Entry<Integer, HashSet<Square>> entry : calculationOrderMap.entrySet()){
+//            for (Square square : entry.getValue()) {
+//                square.run();
+//            }
+//        }
     }
 
     private void addToCalculationOrderMap(Map<Integer, HashSet<Square>> calculationOrderMap, Set<Square> analyzedSquares, int level) {
