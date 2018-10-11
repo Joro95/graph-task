@@ -35,7 +35,7 @@ public class InputParserTest {
     @Test
     public void getExpressionReturnsCorrectExpressionWithoutEqualsSign() {
         String expected = "5+10";
-        String inputString = "A3=5 + 10";
+        String inputString = "A3=5+10";
         String actual = getExpression(inputString);
 
         assertEquals("The parsed string did not remove the equals sign correctly", expected, actual);

@@ -29,7 +29,6 @@ public class TestDataGenerator {
                 expression.append(reference).append(1);
                 StringBuilder dependencies = new StringBuilder();
                 dependencies.append(reference).append(1).append("=");
-                System.out.println(expression);
                 for (int j = i + 1; j < sizeOfData - 1; j++) {
                     String dependencyReference = Converter.columnToLetters(j + 1);
                     dependencies.append(dependencyReference).append(1).append(generateRandomArithmeticOperation());
@@ -37,7 +36,6 @@ public class TestDataGenerator {
                 dependencies.append(1);
                 graphFacade.processExpression(dependencies.toString());
                 expression.append(generateRandomArithmeticOperation());
-                System.out.println(dependencies);
             }
             expression.append(1);
             graphFacade.processExpression(expression.toString());
@@ -49,7 +47,7 @@ public class TestDataGenerator {
     }
 
     private static String generateRandomArithmeticOperation() {
-        String[] symbols = {"-", "+", "/", "*", "^"};
+        String[] symbols = {"-", "+"};
         return symbols[new Random().nextInt(symbols.length)];
     }
 }
