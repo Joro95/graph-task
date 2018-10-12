@@ -19,35 +19,99 @@ public class TestDataGenerator {
         throw new IllegalStateException();
     }
 
-    public static String generateData(GraphFacade graphFacade, int sizeOfData) {
-        String lastDependencyName = Converter.columnToLetters(sizeOfData - 1) + "1";
-        try {
-            StringBuilder expression = new StringBuilder();
-            expression.append("A1=");
-            for (int i = 0; i < sizeOfData - 2; i++) {
-                String reference = Converter.columnToLetters(i + 1);
-                expression.append(reference).append(1);
-                StringBuilder dependencies = new StringBuilder();
-                dependencies.append(reference).append(1).append("=");
-                for (int j = i + 1; j < sizeOfData - 1; j++) {
-                    String dependencyReference = Converter.columnToLetters(j + 1);
-                    dependencies.append(dependencyReference).append(1).append(generateRandomArithmeticOperation());
-                }
-                dependencies.append(1);
-                graphFacade.processExpression(dependencies.toString());
-                expression.append(generateRandomArithmeticOperation());
-            }
-            expression.append(1);
-            graphFacade.processExpression(expression.toString());
-        } catch (InvalidInputException | CircularDependenciesException | CellNotInitializedException | ParseException | InterruptedException | ExecutionException e) {
-            System.out.println("ERROR");
-            e.getMessage();
+//    public static String generateData(GraphFacade graphFacade, int sizeOfData) {
+//        String lastDependencyName = "";
+//        try {
+//            StringBuilder expression = new StringBuilder();
+//            expression.append("A1=");
+//            for (int i = 1; i < sizeOfData; i++) {
+//                String reference = Converter.columnToLetters(i);
+//                reference = reference.concat(1 + "");
+//                StringBuilder innerExpression = new StringBuilder(reference + "=");
+//                for (int j = 0; j < sizeOfData; j++) {
+//                    String innerReference = Converter.columnToLetters(j);
+//                    innerReference = innerReference.concat((i + 1) + "");
+//                    StringBuilder nestedExpression = new StringBuilder(innerReference + "=");
+//                    for (int k = j + 1; k < sizeOfData + 1; k++) {
+//                        String nestedReference = Converter.columnToLetters(k);
+//                        nestedReference = nestedReference.concat((i+1) + "");
+//                        nestedExpression.append(nestedReference);
+//                        nestedExpression.append(generateRandomArithmeticOperation());
+//                    }
+//                    nestedExpression.append("1");
+//                    graphFacade.processExpression(nestedExpression.toString());
+//                    innerExpression.append(innerReference);
+//                    innerExpression.append(generateRandomArithmeticOperation());
+//                }
+//                innerExpression.append("1");
+//                graphFacade.processExpression(innerExpression.toString());
+//                expression.append(reference);
+//                expression.append(generateRandomArithmeticOperation());
+//            }
+//            expression.append("1");
+//            lastDependencyName = Converter.columnToLetters(sizeOfData);
+//            for (int i = 1; i < sizeOfData; i++) {
+//                String ref = lastDependencyName + i;
+//                String nextCell = lastDependencyName + (i + 1);
+//                graphFacade.processExpression(ref + "=" + nextCell);
+//            }
+//            graphFacade.processExpression(expression.toString());
+//        } catch (InvalidInputException | CircularDependenciesException | CellNotInitializedException | ParseException | InterruptedException | ExecutionException e) {
+//            System.out.println("ERROR");
+//            e.getMessage();
+//        }
+//        return lastDependencyName + sizeOfData + "";
+//    }
+
+    public static String generateData(GraphFacade graphFacade, int sizeOfData) throws CircularDependenciesException, InterruptedException, ParseException, InvalidInputException, ExecutionException, CellNotInitializedException {
+        String dependencyName = "A1";
+        StringBuilder expression = new StringBuilder();
+        for (int i = 1; i < sizeOfData + 1; i++) {
+            String reference = Converter.columnToLetters(1);
+            String expressionReference = reference.concat(i + "=" + dependencyName);
+            graphFacade.processExpression(expressionReference);
         }
-        return lastDependencyName;
+
+        for (int i = 1; i < sizeOfData + 1; i++) {
+            String reference = Converter.columnToLetters(2);
+            String expressionReference = reference.concat(i + "=");
+            for (int j = 1; j < sizeOfData; j++) {
+                expressionReference = expressionReference.concat("B" + j + "+");
+            }
+            expressionReference = expressionReference.concat("B" + sizeOfData);
+            graphFacade.processExpression(expressionReference);
+        }
+
+        for (int i = 1; i < sizeOfData + 1; i++) {
+            String reference = Converter.columnToLetters(3);
+            String expressionReference = reference.concat(i + "=");
+            for (int j = 1; j < sizeOfData; j++) {
+                expressionReference = expressionReference.concat("C" + j + "+");
+            }
+            expressionReference = expressionReference.concat("C" + sizeOfData);
+            graphFacade.processExpression(expressionReference);
+        }
+
+        String endPoint = "E1";
+        String expr = endPoint +"=";
+        for (int i = 1; i < sizeOfData; i++) {
+            expr = expr.concat("D" + i + "+");
+        }
+        expr = expr.concat("D"+sizeOfData);
+        graphFacade.processExpression(expr);
+        return dependencyName;
     }
 
     private static String generateRandomArithmeticOperation() {
-        String[] symbols = {"-", "+"};
+
+        String[] symbols = {"+"};
         return symbols[new Random().nextInt(symbols.length)];
+    }
+
+    public static void main(String[] args) throws CircularDependenciesException, InterruptedException, ParseException, InvalidInputException, ExecutionException, CellNotInitializedException {
+        GraphFacade graphFacade = GraphFacade.getInstance();
+        String s = TestDataGenerator.generateData(graphFacade, 10);
+//        System.out.println(s);
+//        System.out.println("END");
     }
 }
