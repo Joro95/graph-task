@@ -138,8 +138,9 @@ public class Square implements Runnable{
                 analyzedSquares.add(this);
             }
         }
+        int nextLevel = level + 1;
         for (Square square : observersGraph) {
-            square.addToCalculationOrderMap(calculationOrderMap, analyzedSquares, ++level);
+            square.addToCalculationOrderMap(calculationOrderMap, analyzedSquares, nextLevel);
         }
     }
 
