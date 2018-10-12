@@ -25,7 +25,7 @@ import java.util.concurrent.ExecutionException;
 
 @AxisRange(min = 0, max = 0.5)
 @BenchmarkMethodChart(filePrefix = "benchmark-lists")
-@BenchmarkOptions(benchmarkRounds = 1, warmupRounds = 0)
+@BenchmarkOptions(benchmarkRounds = 10, warmupRounds = 10)
 public class BenchmarkTest {
 
     private static final WriterConsumer consoleConsumer = new WriterConsumer();
@@ -57,12 +57,13 @@ public class BenchmarkTest {
     @Test
     public void benchmarkTestStrategy1() throws CircularDependenciesException, InterruptedException, ParseException, InvalidInputException, ExecutionException, CellNotInitializedException {
         //Arrange
-        String square = TestDataGenerator.generateData(graphFacade, 21);
+        String square = TestDataGenerator.generateData(graphFacade, 120);
 
         //Act
+//        System.out.println(square);
         graphFacade.processExpression(square + "=1");
-        Square square1 = SquareFinder.getSquare("A1", graphFacade.getGraph());
-        System.out.println(square1.getValue());
+        Square square1 = SquareFinder.getSquare("E1", graphFacade.getGraph());
+//        System.out.println(square1.getValue());
     }
 
 }
