@@ -129,23 +129,28 @@ public class Square implements Runnable{
                 calculationOrderMap.put(level, new HashSet<>());
             }
             if (analyzedSquares.contains(this)) {
-                deleteExistingEntry(calculationOrderMap);
+                boolean isDeleted = deleteExistingEntry(calculationOrderMap, level);
+                if (isDeleted){
+                    calculationOrderMap.get(level).add(this);
+                }
+            } else {
+                calculationOrderMap.get(level).add(this);
+                analyzedSquares.add(this);
             }
-            analyzedSquares.add(this);
-            calculationOrderMap.get(level).add(this);
         }
         for (Square square : observersGraph) {
             square.addToCalculationOrderMap(calculationOrderMap, analyzedSquares, ++level);
         }
     }
 
-    private void deleteExistingEntry(Map<Integer, HashSet<Square>> calculationOrderMap) {
-        for (Set<Square> squareSet : calculationOrderMap.values()) {
-            if (squareSet.contains(this)) {
-                squareSet.remove(this);
-                return;
+    private boolean deleteExistingEntry(Map<Integer, HashSet<Square>> calculationOrderMap, int levelLimit) {
+        for(int i = 1; i < levelLimit; i++){
+            Set<Square> squareSet = calculationOrderMap.get(i);
+            if (squareSet.contains(this)){
+                return squareSet.remove(this);
             }
         }
+        return false;
     }
 
     private boolean allFieldsInitialized() {
