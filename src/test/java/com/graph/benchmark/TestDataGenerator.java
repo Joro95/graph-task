@@ -93,12 +93,13 @@ public class TestDataGenerator {
         }
 
         String endPoint = "E1";
-        String expr = endPoint +"=";
+        String expr = endPoint + "=";
         for (int i = 1; i < sizeOfData; i++) {
             expr = expr.concat("D" + i + "+");
         }
-        expr = expr.concat("D"+sizeOfData);
+        expr = expr.concat("D" + sizeOfData);
         graphFacade.processExpression(expr);
+
         return dependencyName;
     }
 
