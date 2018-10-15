@@ -6,24 +6,14 @@ import com.graph.exception.CircularDependenciesException;
 import com.graph.exception.ExpressionCalculationException;
 import com.graph.exception.ParseException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-public class Square implements Runnable{
-
-    public enum Status {
-        INITIALIZED,
-        NOT_INITIALIZED,
-        ERROR
-    }
+public class Square implements Runnable {
 
     private String name;
     private Status status;
@@ -62,6 +52,7 @@ public class Square implements Runnable{
             calculateValue();
             if ((oldValue == null || !oldValue.equals(this.value)) && !this.observersGraph.isEmpty()) {
                 Map<Integer, HashSet<Square>> calculationOrderMap = new HashMap<>();
+//                        constructCalculationOrderMapForSquare(this);
                 addToCalculationOrderMap(calculationOrderMap, new HashSet<>(), 0);
                 recalculateObserversExpressionTree(calculationOrderMap);
             }
@@ -104,23 +95,23 @@ public class Square implements Runnable{
     }
 
     private void recalculateObserversExpressionTree(Map<Integer, HashSet<Square>> calculationOrderMap) throws InterruptedException, ExecutionException {
-        ExecutorService executor = SquareExecutorService.getExecutor();
-        for (Map.Entry<Integer, HashSet<Square>> entry : calculationOrderMap.entrySet()) {
-            List<Future> futures = new ArrayList<>();
-
-            for (Square square : entry.getValue()) {
-                Future future = executor.submit(square);
-                futures.add(future);
-            }
-            for (Future future : futures) {
-                future.get();
-            }
-        }
-//        for (Map.Entry<Integer, HashSet<Square>> entry : calculationOrderMap.entrySet()){
+//        ExecutorService executor = SquareExecutorService.getExecutor();
+//        for (Map.Entry<Integer, HashSet<Square>> entry : calculationOrderMap.entrySet()) {
+//            List<Future> futures = new ArrayList<>();
+//
 //            for (Square square : entry.getValue()) {
-//                square.run();
+//                Future future = executor.submit(square);
+//                futures.add(future);
+//            }
+//            for (Future future : futures) {
+//                future.get();
 //            }
 //        }
+        for (Map.Entry<Integer, HashSet<Square>> entry : calculationOrderMap.entrySet()){
+            for (Square square : entry.getValue()) {
+                square.run();
+            }
+        }
     }
 
     private void addToCalculationOrderMap(Map<Integer, HashSet<Square>> calculationOrderMap, Set<Square> analyzedSquares, int level) {
@@ -137,6 +128,34 @@ public class Square implements Runnable{
         for (Square square : observersGraph) {
             square.addToCalculationOrderMap(calculationOrderMap, analyzedSquares, ++level);
         }
+    }
+
+    private static Map<Integer, HashSet<Square>> constructCalculationOrderMapForSquare(Square square) {
+        Map<Integer, HashSet<Square>> calculationOrderMap = new HashMap<>();
+        Map<Square, Integer> squareLevelMap = constructSquareLevelMap(square.getObserversGraph(), new HashMap<>(), 1);
+
+        squareLevelMap.entrySet().forEach(entry -> {
+            Integer level = entry.getValue();
+            calculationOrderMap.computeIfAbsent(level, k -> new HashSet<>());
+            calculationOrderMap.get(level).add(entry.getKey());
+        });
+
+        return calculationOrderMap;
+    }
+
+    private static Map<Square, Integer> constructSquareLevelMap(Set<Square> remainingObservers, Map<Square, Integer> analyzedSquares, int level) {
+        if (remainingObservers.isEmpty()) {
+            return analyzedSquares;
+        }
+        Set<Square> newObserverSet = new HashSet<>();
+        int finalLevel = level;
+
+        remainingObservers.forEach(observer -> {
+            newObserverSet.addAll(observer.getObserversGraph());
+            analyzedSquares.put(observer, finalLevel);
+        });
+
+        return constructSquareLevelMap(newObserverSet, analyzedSquares, ++level);
     }
 
     private void deleteExistingEntry(Map<Integer, HashSet<Square>> calculationOrderMap) {
@@ -169,8 +188,12 @@ public class Square implements Runnable{
         return value;
     }
 
-    public String getExpression() {
+    String getExpression() {
         return expression;
+    }
+
+    public Set<Square> getObserversGraph() {
+        return observersGraph;
     }
 
     @Override
@@ -185,5 +208,11 @@ public class Square implements Runnable{
     public int hashCode() {
 
         return Objects.hash(name);
+    }
+
+    public enum Status {
+        INITIALIZED,
+        NOT_INITIALIZED,
+        ERROR
     }
 }
