@@ -39,11 +39,13 @@ public class TestDataGenerator {
 //                        nestedExpression.append(generateRandomArithmeticOperation());
 //                    }
 //                    nestedExpression.append("1");
+////                    System.out.println(nestedExpression);
 //                    graphFacade.processExpression(nestedExpression.toString());
 //                    innerExpression.append(innerReference);
 //                    innerExpression.append(generateRandomArithmeticOperation());
 //                }
 //                innerExpression.append("1");
+////                System.out.println(innerExpression);
 //                graphFacade.processExpression(innerExpression.toString());
 //                expression.append(reference);
 //                expression.append(generateRandomArithmeticOperation());
@@ -53,8 +55,10 @@ public class TestDataGenerator {
 //            for (int i = 1; i < sizeOfData; i++) {
 //                String ref = lastDependencyName + i;
 //                String nextCell = lastDependencyName + (i + 1);
+////                System.out.println(ref + "=" + nextCell);
 //                graphFacade.processExpression(ref + "=" + nextCell);
 //            }
+////            System.out.println(expression);
 //            graphFacade.processExpression(expression.toString());
 //        } catch (InvalidInputException | CircularDependenciesException | CellNotInitializedException | ParseException | InterruptedException | ExecutionException e) {
 //            System.out.println("ERROR");
@@ -75,30 +79,32 @@ public class TestDataGenerator {
         for (int i = 1; i < sizeOfData + 1; i++) {
             String reference = Converter.columnToLetters(2);
             String expressionReference = reference.concat(i + "=");
-            for (int j = 1; j < sizeOfData; j++) {
-                expressionReference = expressionReference.concat("B" + j + "+");
-            }
-            expressionReference = expressionReference.concat("B" + sizeOfData);
+//            for (int j = 1; j < sizeOfData; j++) {
+//                expressionReference = expressionReference.concat("B" + j + "+");
+//            }
+            expressionReference = expressionReference.concat("B" + i);
+//            System.out.println(expressionReference);
             graphFacade.processExpression(expressionReference);
         }
 
         for (int i = 1; i < sizeOfData + 1; i++) {
             String reference = Converter.columnToLetters(3);
             String expressionReference = reference.concat(i + "=");
-            for (int j = 1; j < sizeOfData; j++) {
-                expressionReference = expressionReference.concat("C" + j + "+");
-            }
-            expressionReference = expressionReference.concat("C" + sizeOfData);
+//            for (int j = 1; j < sizeOfData; j++) {
+//                expressionReference = expressionReference.concat("C" + j + "+");
+//            }
+            expressionReference = expressionReference.concat("C" + i);
             graphFacade.processExpression(expressionReference);
         }
 
         String endPoint = "E1";
-        String expr = endPoint +"=";
+        String expr = endPoint + "=";
         for (int i = 1; i < sizeOfData; i++) {
             expr = expr.concat("D" + i + "+");
         }
-        expr = expr.concat("D"+sizeOfData);
+        expr = expr.concat("D" + sizeOfData);
         graphFacade.processExpression(expr);
+
         return dependencyName;
     }
 
@@ -110,7 +116,7 @@ public class TestDataGenerator {
 
     public static void main(String[] args) throws CircularDependenciesException, InterruptedException, ParseException, InvalidInputException, ExecutionException, CellNotInitializedException {
         GraphFacade graphFacade = GraphFacade.getInstance();
-        String s = TestDataGenerator.generateData(graphFacade, 10);
+        String s = TestDataGenerator.generateData(graphFacade, 4);
 //        System.out.println(s);
 //        System.out.println("END");
     }
