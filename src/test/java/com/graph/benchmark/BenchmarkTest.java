@@ -15,6 +15,7 @@ import com.graph.finder.SquareFinder;
 import com.graph.model.Graph;
 import com.graph.model.Square;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -25,7 +26,7 @@ import java.util.concurrent.ExecutionException;
 
 @AxisRange(min = 0, max = 0.5)
 @BenchmarkMethodChart(filePrefix = "benchmark-lists")
-@BenchmarkOptions(benchmarkRounds = 10, warmupRounds = 10)
+@BenchmarkOptions(benchmarkRounds = 20, warmupRounds = 3)
 public class BenchmarkTest {
 
     private static final WriterConsumer consoleConsumer = new WriterConsumer();
@@ -39,30 +40,16 @@ public class BenchmarkTest {
 
     private GraphFacade graphFacade = GraphFacade.getInstance();
 
-    @Before
-    public void setup(){
-//        clearGraph(graphFacade.getGraph());
-//        TestDataGenerator.generateData(graphFacade, 10);
-    }
-
-    private void clearGraph(Graph graph){
-        List<ArrayList<Square>> table = graph.getTableOfSquares();
-        for (ArrayList<Square> columns : table) {
-            for (int square = 0; square < columns.size(); square++) {
-                columns.set(square, new Square("", Square.Status.NOT_INITIALIZED));
-            }
-        }
-    }
-
     @Test
+    @Ignore
     public void benchmarkTestStrategy1() throws CircularDependenciesException, InterruptedException, ParseException, InvalidInputException, ExecutionException, CellNotInitializedException {
         //Arrange
-        String square = TestDataGenerator.generateData(graphFacade, 300);
+        String square = TestDataGenerator.generateData(graphFacade, 10000);
 
         //Act
 //        System.out.println(square);
-        graphFacade.processExpression(square + "=1");
-        Square square1 = SquareFinder.getSquare("A1", graphFacade.getGraph());
+        graphFacade.processExpression("A1=1");
+        Square square1 = SquareFinder.getSquare("E1", graphFacade.getGraph());
 //        System.out.println(square1.getValue());
     }
 
