@@ -34,4 +34,6 @@ public class NumberNode implements Node {
     public int hashCode() {
         return Objects.hashCode(data);
     }
+
+
 }

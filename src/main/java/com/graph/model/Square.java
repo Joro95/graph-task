@@ -5,6 +5,7 @@ import com.graph.exception.CellNotInitializedException;
 import com.graph.exception.CircularDependenciesException;
 import com.graph.exception.ExpressionCalculationException;
 import com.graph.exception.ParseException;
+import com.graph.traverser.ExpressionTreeTraverser;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -81,7 +82,7 @@ public class Square implements Runnable {
 
     private void calculateValue() {
         try {
-            this.value = expressionTree.calculateValue();
+            ExpressionTreeTraverser.calculateSquareValue(this);
             this.status = Status.INITIALIZED;
         } catch (CellNotInitializedException e) {
             this.status = Status.NOT_INITIALIZED;
@@ -134,7 +135,6 @@ public class Square implements Runnable {
             newObserverSet.addAll(observer.getObserversGraph());
             analyzedSquares.put(observer, finalLevel);
         });
-
         return constructSquareLevelMap(newObserverSet, analyzedSquares, ++level);
     }
 
@@ -163,8 +163,16 @@ public class Square implements Runnable {
         return expression;
     }
 
+    public Node getExpressionTree() {
+        return expressionTree;
+    }
+
     public Set<Square> getObserversGraph() {
         return observersGraph;
+    }
+
+    public void setValue(Double value) {
+        this.value = value;
     }
 
     @Override
