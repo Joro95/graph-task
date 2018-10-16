@@ -73,6 +73,7 @@ public class TestDataGenerator {
         for (int i = 1; i < sizeOfData + 1; i++) {
             String reference = Converter.columnToLetters(1);
             String expressionReference = reference.concat(i + "=" + dependencyName);
+//            System.out.println(expressionReference);
             graphFacade.processExpression(expressionReference);
         }
 
@@ -94,6 +95,7 @@ public class TestDataGenerator {
 //                expressionReference = expressionReference.concat("C" + j + "+");
 //            }
             expressionReference = expressionReference.concat("C" + i);
+//            System.out.println(expressionReference);
             graphFacade.processExpression(expressionReference);
         }
 
@@ -103,6 +105,7 @@ public class TestDataGenerator {
             expr = expr.concat("D" + i + "+");
         }
         expr = expr.concat("D" + sizeOfData);
+//        System.out.println(expr);
         graphFacade.processExpression(expr);
 
         return dependencyName;

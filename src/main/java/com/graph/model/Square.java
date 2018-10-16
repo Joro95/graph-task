@@ -10,8 +10,6 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class Square implements Runnable {
 
@@ -51,9 +49,7 @@ public class Square implements Runnable {
         if (allFieldsInitialized()) {
             calculateValue();
             if ((oldValue == null || !oldValue.equals(this.value)) && !this.observersGraph.isEmpty()) {
-                Map<Integer, HashSet<Square>> calculationOrderMap = new HashMap<>();
-//                        constructCalculationOrderMapForSquare(this);
-                addToCalculationOrderMap(calculationOrderMap, new HashSet<>(), 0);
+                Map<Integer, HashSet<Square>> calculationOrderMap = constructCalculationOrderMapForSquare(this);
                 recalculateObserversExpressionTree(calculationOrderMap);
             }
         }
@@ -114,22 +110,6 @@ public class Square implements Runnable {
         }
     }
 
-    private void addToCalculationOrderMap(Map<Integer, HashSet<Square>> calculationOrderMap, Set<Square> analyzedSquares, int level) {
-        if (level > 0) {
-            if (!calculationOrderMap.containsKey(level)) {
-                calculationOrderMap.put(level, new HashSet<>());
-            }
-            if (analyzedSquares.contains(this)) {
-                deleteExistingEntry(calculationOrderMap);
-            }
-            analyzedSquares.add(this);
-            calculationOrderMap.get(level).add(this);
-        }
-        for (Square square : observersGraph) {
-            square.addToCalculationOrderMap(calculationOrderMap, analyzedSquares, ++level);
-        }
-    }
-
     private static Map<Integer, HashSet<Square>> constructCalculationOrderMapForSquare(Square square) {
         Map<Integer, HashSet<Square>> calculationOrderMap = new HashMap<>();
         Map<Square, Integer> squareLevelMap = constructSquareLevelMap(square.getObserversGraph(), new HashMap<>(), 1);
@@ -156,15 +136,6 @@ public class Square implements Runnable {
         });
 
         return constructSquareLevelMap(newObserverSet, analyzedSquares, ++level);
-    }
-
-    private void deleteExistingEntry(Map<Integer, HashSet<Square>> calculationOrderMap) {
-        for (Set<Square> squareSet : calculationOrderMap.values()) {
-            if (squareSet.contains(this)) {
-                squareSet.remove(this);
-                return;
-            }
-        }
     }
 
     private boolean allFieldsInitialized() {

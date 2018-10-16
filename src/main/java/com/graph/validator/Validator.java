@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class Validator {
 
     private static final int COLUMN_MAX_SIZE = 2;
-    private static final int ROW_MAX_SIZE = 3;
+    private static final int ROW_MAX_SIZE = 5;
 
     private Validator(){
         throw new IllegalStateException();

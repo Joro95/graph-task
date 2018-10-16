@@ -11,9 +11,9 @@ public class Graph {
 
     public Graph(){
         tableOfSquares = new ArrayList<>();
-        for (int i = 1; i<999; i++){
+        for (int i = 1; i<20000; i++){
             tableOfSquares.add(new ArrayList<>());
-            for (int j = 0; j<=702; j++){
+            for (int j = 0; j<=10; j++){
                 tableOfSquares.get(i-1).add(new Square(rowColumnToName(i, j), Square.Status.NOT_INITIALIZED));
             }
         }
