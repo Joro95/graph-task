@@ -135,7 +135,7 @@ public class ExpressionTreeBuilder {
     private static String createNumber(String substring) {
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < substring.length(); i++) {
-            if(!Character.isDigit(substring.charAt(i))) {
+            if(!Character.isDigit(substring.charAt(i)) && substring.charAt(i) != '.') {
                 break;
             }
             sb.append(substring.charAt(i));

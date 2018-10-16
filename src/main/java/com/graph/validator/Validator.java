@@ -18,9 +18,19 @@ public class Validator {
 
     public static void validateInputString(String input) throws InvalidInputException {
         checkForEqualsSign(input);
+        checkForSquareAndExpression(input);
         checkBracketPairs(input);
         checkConsecutiveSymbols(input);
         checkForIllegalSigns(input);
+    }
+
+    private static void checkForSquareAndExpression(String input) throws InvalidInputException {
+        String square = input.substring(0, input.indexOf('=')).trim();
+        String expression = input.substring(input.indexOf('=') + 1, input.length()).trim();
+        if (square.isEmpty() || expression.isEmpty()){
+            throw new InvalidInputException();
+        }
+
     }
 
     public static void validateSquareName(String row, String column) throws InvalidInputException {
@@ -85,7 +95,7 @@ public class Validator {
 
     private static void checkForIllegalSigns(String input) throws InvalidInputException {
         //if there are illegal signs in the input -> throw exception
-        if (!Pattern.matches("[a-zA-Z0-9+\\-*/()^=]*", input)) {
+        if (!Pattern.matches("[a-zA-Z0-9+\\-*/()^=.]*", input)) {
             throw new InvalidInputException();
         }
     }
