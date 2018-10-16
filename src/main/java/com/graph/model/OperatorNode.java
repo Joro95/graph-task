@@ -48,7 +48,15 @@ public class OperatorNode implements Node {
     public void setRightChildNode(Node rightChildNode) {
         this.rightChildNode = rightChildNode;
     }
-    
+
+    public Node getLeftChildNode() {
+        return leftChildNode;
+    }
+
+    public Node getRightChildNode() {
+        return rightChildNode;
+    }
+
     @Override
     public String toString() {
         return "OperatorNode{" +
@@ -71,5 +79,9 @@ public class OperatorNode implements Node {
     @Override
     public int hashCode() {
         return com.google.common.base.Objects.hashCode(leftChildNode, rightChildNode, data);
+    }
+
+    public char getData() {
+        return data;
     }
 }
